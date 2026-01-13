@@ -110,4 +110,8 @@ public final class Constants {
     public static final class VisionConstants {
         public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
     }
+
+    public static final class OIConstants {
+        public static final double kDriveDeadband = 0.05;
+    }
 }
