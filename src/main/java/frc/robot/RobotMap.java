@@ -96,6 +96,12 @@ public class RobotMap {
   public static int D_BACK_RIGHT_TURNING = RoboRioMap.CAN_0;
   public static int D_BACK_LEFT_TURNING = RoboRioMap.CAN_0;
 
+  // [I]ntake 
+  public static boolean I_ENABLED = true;
+
+  // [S]hooter
+  public static boolean S_ENABLED = true;
+
   // [V]ision
   public static boolean V_ENABLED = true;
 }
