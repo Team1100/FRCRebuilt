@@ -4,9 +4,12 @@
        "frontRightSteer" : {"cType":"SparkMax", "mType":"kBrushless","canid":8},
        "frontRightDrive" : {"cType":"SparkFlex","mType":"kBrushless","canid":9}
    },
-   "value1" : "string",
-   "value2" : 42,
-   "value3" : { "nestedvalue" : "value3name", "nestedint" : 19 }
+
+   "Subsystem" : [
+        { "varName" : "exampleInt" , "value" : 18 },
+        { "varName" : "exampleDouble" , "value" : 3.8 },
+        { "varName" : "exampleBoolean" , "value" : false }
+   ]
 },
 
 "default" : { 
@@ -20,12 +23,11 @@
        "backLeftTurning" :   {"cType":"SparkMax", "mType":"kBrushless", "canid":7},
        "backLeftDrive" :     {"cType":"SparkMax", "mType":"kBrushless", "canid":6}
    },
+
    "Drive" : [
-       {"varName" : "frontRightChassisAngularOffset", "value" : 0.0 },
-       {"varName" : "frontLeftChassisAngularOffset", "value" : -1.570796 },
-       {"varName" : "backRightChassisAngularOffset", "value" : 1.570796 },
-       {"varName" : "backLeftChassisAngularOffset", "value" : 3.141593 }
+       {"varName" : "kDrivingP", "value" : 0.02}
    ],
+
    "Intake" : [
        {"varName" : "intakeEnabled", "value" : false},
        {"varName" : "intakeRollerCanId", "value" : 16}
@@ -49,18 +51,14 @@
        "backLeftDrive" :     {"cType":"SparkMax", "mType":"kBrushless", "canid":6}
    },
    "Drive" : [
-       {"varName" : "frontRightChassisAngularOffset", "value" : 0.0 },
-       {"varName" : "frontLeftChassisAngularOffset", "value" : -1.570796 },
-       {"varName" : "backRightChassisAngularOffset", "value" : 1.570796 },
-       {"varName" : "backLeftChassisAngularOffset", "value" : 3.141593 }
-   ],
+       {"varName" : "kDrivingP", "value" : 0.0},
+       {"varName" : "kTurningP", "value" : 0.0}
+    ],
    "Intake" : [
        {"varName" : "intakeEnabled", "value" : false},
-
        {"varName" : "intakeRollerCanId", "value" : 16},
        {"varName" : "intakeRollerStallLimit", "value" : 25},
        {"varName" : "intakeRollerFreeLimit", "value" : 60}
-
    ],
 
    "Shooter" : [

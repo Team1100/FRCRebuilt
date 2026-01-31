@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Consumer;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
@@ -24,6 +26,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -31,14 +34,17 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import edu.wpi.first.math.Matrix;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveModuleConstants;
-import frc.robot.RobotMap;
+import frc.robot.Constants;
 import frc.robot.testingdashboard.*;
 import frc.robot.utils.SwerveUtils;
-import frc.robot.utils.Configuration;
 import frc.robot.utils.FieldUtils;
 
 public class Drive extends SubsystemBase {
@@ -48,22 +54,22 @@ public class Drive extends SubsystemBase {
   private final MAXSwerveModule m_FrontLeft = new MAXSwerveModule(
     config().getMotorController("frontLeftDrive"),
     config().getMotorController("frontLeftTurning"),
-    cfgDbl("frontLeftChassisAngularOffset"));
+    Constants.DriveConstants.kFrontLeftChassisAngularOffset);
 
   private final MAXSwerveModule m_FrontRight = new MAXSwerveModule(
     config().getMotorController("frontRightDrive"),
     config().getMotorController("frontRightTurning"),
-    cfgDbl("frontRightChassisAngularOffset"));
+    Constants.DriveConstants.kFrontRightChassisAngularOffset);
 
   private final MAXSwerveModule m_BackLeft = new MAXSwerveModule(
     config().getMotorController("backLeftDrive"),
     config().getMotorController("backLeftTurning"),
-    cfgDbl("backLeftChassisAngularOffset"));
+    Constants.DriveConstants.kBackLeftChassisAngularOffset);
 
   private final MAXSwerveModule m_BackRight = new MAXSwerveModule(
     config().getMotorController("backRightDrive"),
     config().getMotorController("backRightTurning"),
-    cfgDbl("backRightChassisAngularOffset"));
+    Constants.DriveConstants.kBackRightChassisAngularOffset);
   
   // The gyro sensor
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
@@ -77,6 +83,25 @@ public class Drive extends SubsystemBase {
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
   private ChassisSpeeds m_lastSpeeds = new ChassisSpeeds();
+
+  private final Config cfg = new Config();
+  private final Consumer<Voltage> out = (volts)->{drive(volts.magnitude(), 0, 0, false, false);};
+  private final Consumer<SysIdRoutineLog> log = entry->{
+    entry.motor("FRD").voltage(m_FrontRight.getDriveVoltage())
+                      .linearPosition(m_FrontRight.getDrivePosition())
+                      .linearVelocity(m_FrontRight.getDriveVelocity());
+    entry.motor("FLD").voltage(m_FrontLeft.getDriveVoltage())
+                      .linearPosition(m_FrontLeft.getDrivePosition())
+                      .linearVelocity(m_FrontLeft.getDriveVelocity());
+    entry.motor("BRD").voltage(m_BackRight.getDriveVoltage())
+                      .linearPosition(m_BackRight.getDrivePosition())
+                      .linearVelocity(m_BackRight.getDriveVelocity());
+    entry.motor("BLD").voltage(m_BackLeft.getDriveVoltage())
+                      .linearPosition(m_BackLeft.getDrivePosition())
+                      .linearVelocity(m_BackLeft.getDriveVelocity());
+  };
+  private Mechanism mech = new Mechanism(out, log, this, "Swerve");
+  private SysIdRoutine m_sysid = new SysIdRoutine(cfg, mech);
 
   //SwerveCrivePoseEstimator class for tracking robot pose
   SwerveDrivePoseEstimator m_DrivePoseEstimator;
@@ -456,6 +481,13 @@ public class Drive extends SubsystemBase {
    */
   public double getTurnRate() {
     return m_gyro.getRate(IMUAxis.kZ) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  public edu.wpi.first.wpilibj2.command.Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_sysid.quasistatic(direction);
+  }
+  public edu.wpi.first.wpilibj2.command.Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_sysid.dynamic(direction);
   }
 
   private void updateTD(){
