@@ -12,11 +12,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.FieldLocationConstants;
 
 public class FieldUtils{
     private static FieldUtils m_fieldUtils;
+    private Timer timer;
 
     // TODO: fun fact, it's not reefscape anymore; replace ids
     public static final AllianceAprilTags RedTags =
@@ -53,7 +56,9 @@ public class FieldUtils{
         return m_fieldUtils;
     }
 
-    private FieldUtils(){}
+    private FieldUtils(){
+        timer = new Timer();
+    }
 
     public AllianceAprilTags getAllianceAprilTags(){
         AllianceAprilTags tags = BlueTags;
@@ -93,4 +98,52 @@ public class FieldUtils{
     public boolean inAllianceHalf(Pose2d robotPose, Alliance alliance) {
         return (alliance == Alliance.Blue) ^ (robotPose.getX() > FieldLocationConstants.kMidfieldX);
     }
+
+
+    public char getAutoWinner(){ 
+        String gameData = DriverStation.getGameSpecificMessage();
+        if (gameData.length() > 0){
+            return (gameData.charAt(0)); // R or B
+        } else {
+            return 'n'; //null
+        }
+    }
+    public void startGameTimer(){
+        timer.start();
+    }
+    public char getGameState(){
+        double time = timer.get();
+        char firstTeam;
+        char secondTeam = getAutoWinner();
+        if (secondTeam == 'R'){
+            firstTeam = 'B';
+        } else if (secondTeam == 'B') {
+            firstTeam = 'R';
+        } else {
+            firstTeam = 'n'; //null
+        }
+
+        if (time > 0 && time < 20){
+            return 'A'; //auto
+        } else if (time >= 20 && time < 30){
+            return 'T'; //transition
+        } else if (time >= 30 && time < 55){
+            return firstTeam;
+        } else if (time >= 55 && time < 80){
+            return secondTeam;
+        } else if (time >= 80 && time < 105){
+            return firstTeam;
+        } else if (time >= 105 && time < 130){
+            return secondTeam;
+        } else if (time >= 130 && time < 160){
+            return 'E'; //endgame
+        } else {
+            return 'n'; //null
+        }
+
+    }
+    public double stateTimeLeft(){
+        return timer.getMatchTime(); //approximate
+    }
+    
 }
