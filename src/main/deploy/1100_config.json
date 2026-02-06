@@ -54,6 +54,12 @@
        {"varName" : "kDrivingP", "value" : 0.02},
        {"varName" : "kTurningP", "value" : 1.0}
     ],
+   "Spindex" : [
+       {"varName" : "spindexEnabled", "value" : false},
+       {"varName" : "spindexCanId", "value" : 15},
+       {"varName" : "spindexStallLimit", "value" : 0},
+       {"varName" : "spindexFreeLimit", "value" : 60}
+   ],
    "Intake" : [
        {"varName" : "intakeEnabled", "value" : false},
        {"varName" : "intakeRollerCanId", "value" : 16},
