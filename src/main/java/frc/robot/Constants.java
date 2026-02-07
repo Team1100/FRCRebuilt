@@ -162,5 +162,11 @@ public final class Constants {
         public static final double kClimberMaxAcceleration = 35;
         public static final double kClimberSpeed = 0.2;
         public static final double kClimberSpeedRPM = 30;
+
+        public static final double kClimberEncoderPositionFactor = (20.0/22.0*0.25); /* (planetary ratio) / (sprocket teeth) * (Inches per tooth) */
+
+        public static final double DEGREES_PER_REVOLUTION = 360;
+        public static final double kClimberLowerLimitInches = 0;
+        public static final double kClimberUpperLimitInches = 26.5;
     }
 }
