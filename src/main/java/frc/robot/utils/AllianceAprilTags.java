@@ -6,42 +6,57 @@ package frc.robot.utils;
 
 /** Add your docs here. */
 public class AllianceAprilTags {
-    // TODO: fun fact, it's not reefscape anymore; replace tags
-    public int leftCoralStation;
-    public int rightCoralStation;
-    public int processor;
-    public int rightBarge;
-    public int leftBarge;
-    public int leftFrontReef;
-    public int middleFrontReef;
-    public int rightFrontReef;
-    public int leftBackReef;
-    public int middleBackReef;
-    public int rightBackReef;
+
+    public int leftTower;
+    public int rightTower;
+    public int leftOutpost;
+    public int rightOutpost;
+    public int frontLeftTrench;
+    public int frontRightTrench;
+    public int backLeftTrench;
+    public int backRightTrench;
+    public int frontLeftHub;
+    public int frontRightHub;
+    public int leftLeftHub;
+    public int leftRightHub;
+    public int rightLeftHub;
+    public int rightRightHub;
+    public int backLeftHub;
+    public int backRightHub;
 
     public AllianceAprilTags(
-        int leftCoralStation,
-        int rightCoralStation,
-        int processor,
-        int rightBarge,
-        int leftBarge,
-        int leftFrontReef,
-        int middleFrontReef,
-        int rightFrontReef,
-        int leftBackReef,
-        int middleBackReef,
-        int rightBackReef
+        int leftTower,
+        int rightTower,
+        int leftOutpost,
+        int rightOutpost,
+        int frontLeftTrench,
+        int frontRightTrench,
+        int backLeftTrench,
+        int backRightTrench,
+        int frontLeftHub,
+        int frontRightHub,
+        int leftLeftHub, 
+        int leftRightHub,
+        int rightLeftHub,
+        int rightRightHub,
+        int backLeftHub,
+        int backRightHub
     ){
-        this.leftCoralStation = leftCoralStation;
-        this.rightCoralStation = rightCoralStation;
-        this.processor = processor;
-        this.rightBarge = rightBarge;
-        this.leftBarge = leftBarge;
-        this.leftFrontReef = leftFrontReef;
-        this.middleFrontReef = middleFrontReef;
-        this.rightFrontReef = rightFrontReef;
-        this.leftBackReef = leftBackReef;
-        this.middleBackReef = middleBackReef;
-        this.rightBackReef =rightBackReef;
+        this.leftTower = leftTower;
+        this.rightTower = rightTower;
+        this.leftOutpost = leftOutpost;
+        this.rightOutpost = rightOutpost;
+        this.frontLeftTrench = frontLeftTrench;
+        this.frontRightTrench = frontRightTrench;
+        this.backLeftTrench = backLeftTrench;
+        this.backRightTrench = backRightTrench;
+        this.frontLeftHub = frontLeftHub;
+        this.frontRightHub = frontLeftHub;
+        this.leftLeftHub = leftLeftHub;
+        this.leftRightHub = leftRightHub;
+        this.rightLeftHub = rightLeftHub;
+        this.rightRightHub = rightRightHub;
+        this.backLeftHub = backLeftHub;
+        this.backRightHub =backRightHub;
     }
 }
