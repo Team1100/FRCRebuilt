@@ -144,4 +144,10 @@ public final class Constants {
     public static final class OIConstants {
         public static final double kDriveDeadband = 0.05;
     }
+
+    public static final class LEDConstants {
+        public static final int LEDLength = 49; // number of LEDs
+        public static final int kPositionSplitIndex = 10;
+        public static final boolean kInversePolarity = true; //dont know what it does but it seems cool
+    }
 }
