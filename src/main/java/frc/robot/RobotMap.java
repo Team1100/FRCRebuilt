@@ -50,4 +50,7 @@ public class RobotMap {
 
   // [V]ision
   public static boolean V_ENABLED = true;
+
+  // [C]limber
+  public static boolean C_ENABLED = true;
 }

@@ -76,6 +76,10 @@
         {"varName" : "stateChangeWarningTime", "value" : 1.5 }
    ],
 
+   "Climber" : [
+        {"varName" : "motorCanId", "value" : 18}
+   ],
+
    "visionConfig" : [
         {"name":"Arducam_OV9782_B","positionT":{"x":0.0,"y":0.0,"z":0.0},"positionR":{"quaternion":{"W":1.0,"X":0.0,"Y":0.0,"Z":0.0}},"primaryStrat":"LOWEST_AMBIGUITY","backupStrat":"CLOSEST_TO_CAMERA_HEIGHT"},
         {"name":"Arducam_OV9782_C","positionT":{"x":0.0,"y":0.0,"z":0.0},"positionR":{"quaternion":{"W":1.0,"X":0.0,"Y":0.0,"Z":0.0}},"primaryStrat":"LOWEST_AMBIGUITY","backupStrat":"CLOSEST_TO_CAMERA_HEIGHT"}

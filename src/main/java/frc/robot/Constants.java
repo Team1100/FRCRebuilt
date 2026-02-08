@@ -144,4 +144,29 @@ public final class Constants {
     public static final class OIConstants {
         public static final double kDriveDeadband = 0.05;
     }
+
+    public static final class ClimberConstants {
+        // Climber Constants
+        public static final boolean kEnableClimberPIDTuning = false;
+        public static final boolean kEnableClimberClosedLoopControl = true;
+        public static final double kClimberP = 0.3;
+        public static final double kClimberI = 0;
+        public static final double kClimberD = 0;
+        public static final double kClimberkS = 0.20;
+        public static final double kClimberkG = 0.07;
+        public static final double kClimberkV = 0.435;
+        public static final double kClimberkA = 0.0;
+        public static final double kClimberToleranceInches = 0.3;
+
+        public static final double kClimberMaxVelocity = 35;
+        public static final double kClimberMaxAcceleration = 35;
+        public static final double kClimberSpeed = 0.2;
+        public static final double kClimberSpeedRPM = 30;
+
+        public static final double kClimberEncoderPositionFactor = (20.0/22.0*0.25); /* (planetary ratio) / (sprocket teeth) * (Inches per tooth) */
+
+        public static final double DEGREES_PER_REVOLUTION = 360;
+        public static final double kClimberLowerLimitInches = 0;
+        public static final double kClimberUpperLimitInches = 26.5;
+    }
 }
