@@ -4,6 +4,10 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.subsystems.Drive;
 import frc.robot.utils.SwerveDriveInputs;
 
 public class OI {
@@ -36,7 +40,10 @@ public class OI {
     }
 
     public void bindControls() {
-        
+        new JoystickButton(m_driverXboxController, Button.kX.value).whileTrue(Drive.getInstance().sysIdQuasistatic(Direction.kForward));
+        new JoystickButton(m_driverXboxController, Button.kA.value).whileTrue(Drive.getInstance().sysIdQuasistatic(Direction.kReverse));
+        new JoystickButton(m_driverXboxController, Button.kY.value).whileTrue(Drive.getInstance().sysIdDynamic(Direction.kForward));
+        new JoystickButton(m_driverXboxController, Button.kB.value).whileTrue(Drive.getInstance().sysIdDynamic(Direction.kReverse));
     }
 
     public XboxController getDriverController() {

@@ -1,6 +1,5 @@
 package frc.robot;
 
-import java.io.FilenameFilter;
 
 import com.pathplanner.lib.config.PIDConstants;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -14,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import frc.robot.utils.Configuration;
 import frc.robot.utils.vision.VisionConfig;
 
 public final class Constants {
@@ -37,15 +37,18 @@ public final class Constants {
         public static final double kVortexFreeSpeedRPM = 6784;
         public static final double kDrivingMotorFreeSpeedRPS = kVortexFreeSpeedRPM / 60;
         public static final double kDriveWheelFreeSpeedRPS = (kDrivingMotorFreeSpeedRPS * kWheelCircumferenceMeters) / kDrivingMotorReduction;
+        static double nominalVoltage = 12.0;
+        public static final double kDrivingVelocityFF = 1.0 / kDriveWheelFreeSpeedRPS;
 
-        public static final double kDrivingP = 0.4;
+
+        public static final double kDrivingP = Configuration.getInstance().getDouble("Drive", "kDrivingP");
         public static final double kDrivingI = 0;
         public static final double kDrivingD = 0;
         public static final double kDrivingFF = 1 / kDriveWheelFreeSpeedRPS;
         public static final double kDrivingMinOutput = -1;
         public static final double kDrivingMaxOutput = 1;
 
-        public static final double kTurningP = 1;
+        public static final double kTurningP = Configuration.getInstance().getDouble("Drive", "kTurningP");
         public static final double kTurningI = 0;
         public static final double kTurningD = 0;
         public static final double kTurningFF = 0;
