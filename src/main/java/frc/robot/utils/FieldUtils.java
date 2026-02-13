@@ -21,33 +21,43 @@ public class FieldUtils{
     private static FieldUtils m_fieldUtils;
     private Timer timer;
 
-    // TODO: fun fact, it's not reefscape anymore; replace ids
+    // I wrote the directions based on their position on a face
     public static final AllianceAprilTags RedTags =
         new AllianceAprilTags(
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            11,
-            10,
-            9);
-    public static final AllianceAprilTags BlueTags = 
-        new AllianceAprilTags(
-            12,
-            13,
-            14,
             15,
             16,
-            19,
-            18,
+            13,
+            14,
+            7,
+            12,
+            1,
+            6,
+            9,
+            10,
+            5,
+            8,
+            11,
+            2,
+            4,
+            3);
+    public static final AllianceAprilTags BlueTags = 
+        new AllianceAprilTags(
+            31,
+            32,
+            29,
+            30,
+            23,
+            28,
             17,
-            20, 
-            21, 
-            22);
+            22,
+            25, 
+            26, 
+            21,
+            24,
+            27,
+            18,
+            19,
+            20);
 
     public static FieldUtils getInstance(){
         if(m_fieldUtils == null){
