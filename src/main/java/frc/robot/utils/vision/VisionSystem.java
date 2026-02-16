@@ -33,6 +33,7 @@ public class VisionSystem {
     private Optional<VisionEstimationResult> m_latestResult;
     private PoseStrategy m_multiStrategy;
     private PoseStrategy m_singleStrategy;
+    private boolean m_includeInPoseEstimates;
 
     public VisionSystem(VisionConfig config) {
         m_camera = new PhotonCamera(config.cameraName);
@@ -45,6 +46,7 @@ public class VisionSystem {
             m_singleStrategy = config.primaryStrategy;
         }
         m_latestResult = Optional.empty();
+        m_includeInPoseEstimates = config.includeInPoseEstimates;
     }
 
     public String getName() { return m_camera.getName(); }
@@ -208,5 +210,7 @@ public class VisionSystem {
 
         return true;
     }
+
+    public boolean shouldIncludeInPoseEstimates() { return m_includeInPoseEstimates; }
 
 }
