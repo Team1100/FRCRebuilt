@@ -11,7 +11,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.drive.SwerveDrive;
 import frc.robot.commands.vision.DisablePoseUpdates;
 import frc.robot.commands.vision.EnablePoseUpdates;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LED;
+import frc.robot.subsystems.MAXSwerveModule;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Vision;
 import frc.robot.testingdashboard.TestingDashboard;
 
@@ -29,8 +35,20 @@ public class RobotContainer {
 
     registerCommands();
 
+    Climber.getInstance();
+    
     Drive drive = Drive.getInstance();
     drive.setDefaultCommand(new SwerveDrive(m_OI.getDriveInputs()));
+
+    Intake.getInstance();
+
+    LED.getInstance();
+
+    //MAXSwerveModule.getInstance(); the method doesnt exist?
+  
+    Shooter.getInstance();
+
+    Spindexer.getInstance();
 
     Vision.getInstance();
     
