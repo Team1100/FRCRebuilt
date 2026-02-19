@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 
 /** Add your docs here. */
@@ -21,17 +20,20 @@ public class VisionConfig
     public Rotation3d cameraPositionR;
     public PoseStrategy primaryStrategy;
     public PoseStrategy fallBackStrategy;
+    public boolean includeInPoseEstimates;
 
     @JsonCreator
     public VisionConfig(@JsonProperty(required = true, value="name") String name,
                         @JsonProperty(required = true, value="positionT") Translation3d camPositionT,
                         @JsonProperty(required = true, value="positionR") Rotation3d camPositionR,
                         @JsonProperty(required = true, value="primaryStrat") PoseStrategy primPoseStrategy,
-                        @JsonProperty(required = true, value="backupStrat") PoseStrategy fallbackPoseStrategy) {
+                        @JsonProperty(required = true, value="backupStrat") PoseStrategy fallbackPoseStrategy,
+                        @JsonProperty(required = false, value="includeInPoseEstimates", defaultValue="true") boolean includeInPoseEstimates) {
         this.cameraName = name;
         this.cameraPositionT = camPositionT;
         this.cameraPositionR = camPositionR;
         this.primaryStrategy = primPoseStrategy;
         this.fallBackStrategy = fallbackPoseStrategy;
+        this.includeInPoseEstimates = includeInPoseEstimates;
     }
 }

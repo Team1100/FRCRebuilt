@@ -1,30 +1,39 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.PersistMode;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants;
 import frc.robot.testingdashboard.SubsystemBase;
 import frc.robot.testingdashboard.TDNumber;
 import frc.robot.utils.FieldUtils;
+import frc.robot.utils.sensing.SparkCurrentLimitDetector;
+import frc.robot.utils.sensing.SparkCurrentLimitDetector.HardLimitDirection;
 
 public class Shooter extends SubsystemBase{
     private static Shooter m_Shooter = null;
 
-    private SparkFlex m_hoodAngleMotor;
-
     // Flywheel
+    private final boolean m_flywheelEnabled;
     private SparkFlex m_flywheelLeftMotor;
     private SparkFlex m_rightFlywheelMotor;
 
@@ -48,6 +57,7 @@ public class Shooter extends SubsystemBase{
     private TDNumber m_TDflywheelMeasuredCurrent;
 
     // Turret
+    private final boolean m_turretEnabled;
     private SparkFlex m_turretMotor;
 
     private SparkFlexConfig m_turretConfig;
@@ -65,9 +75,43 @@ public class Shooter extends SubsystemBase{
     private TDNumber m_TDturretMeasuredPosition;
     private TDNumber m_TDturretMeasuredCurrent;
 
+    //Hood
+    private final boolean m_hoodEnabled;
+    private boolean m_tuneHood;
+    private SparkMax m_hoodAngleMotor;
+    private SparkMaxConfig m_hoodConfig;
+
+    private RelativeEncoder m_hoodEncoder;
+    
+    private double m_hoodKG;
+    private double m_hoodKS;
+    private double m_hoodKV;
+    private double m_hoodP;
+    private double m_hoodI;
+    private double m_hoodD;
+    private TDNumber m_TDhoodKG;
+    private TDNumber m_TDhoodKS;
+    private TDNumber m_TDhoodKV;
+    private TDNumber m_TDhoodP;
+    private TDNumber m_TDhoodI;
+    private TDNumber m_TDhoodD;
+
+    private SparkClosedLoopController m_hoodClosedLoopController;
+    private ElevatorFeedforward m_hoodFF;
+    private TrapezoidProfile m_hoodProfile;
+    private TrapezoidProfile.State m_hoodState;
+    private TrapezoidProfile.State m_hoodSetpoint;
+
+    private SparkCurrentLimitDetector m_hoodLimiter;
+
+    private TDNumber m_TDHoodMotorCurrent;
+    private TDNumber m_TDHoodPosition;
+    private TDNumber m_TDHoodProfilePosition;
+
     private Drive m_Drive;
 
 	// Chimney
+    private final boolean m_chimneyEnabled;
 	private SparkFlex m_chimneyMotor;
 	private SparkFlexConfig m_chimneyConfig;
 
@@ -76,14 +120,20 @@ public class Shooter extends SubsystemBase{
     private Shooter(){
         super("Shooter");
 
-        m_hoodAngleMotor = new SparkFlex(cfgInt("hoodAngleMotorCANid"), MotorType.kBrushless);
         m_chimneyMotor = new SparkFlex(cfgInt("chimneyMotorCANid"), MotorType.kBrushless);
 
-        if (cfgBool("flywheelEnabled")) setupFlywheel();
+        m_flywheelEnabled = cfgBool("flywheelEnabled");
+        m_turretEnabled = cfgBool("turretEnabled");
+        m_hoodEnabled = cfgBool("hoodEnabled");
+        m_chimneyEnabled = cfgBool("chimneyEnabled");
 
-        if (cfgBool("turretEnabled")) setupTurret();
+        if (m_flywheelEnabled) setupFlywheel();
 
-		if (cfgBool("chimneyEnabled")) setupChimney();
+        if (m_turretEnabled) setupTurret();
+        
+        if(m_hoodEnabled) setupHood();
+
+		if (m_chimneyEnabled) setupChimney();
     }
 
     public static Shooter getInstance() {
@@ -162,7 +212,64 @@ public class Shooter extends SubsystemBase{
         m_Drive = Drive.getInstance();
     }
 
-	public void setupChimney() {
+    public void setupHood() {
+        m_tuneHood = cfgBool("tuneHood");
+        m_hoodAngleMotor = new SparkMax(cfgInt("hoodAngleMotorCANid"), MotorType.kBrushless);
+
+        m_TDhoodKG = new TDNumber(this, "Hood", "kG");
+        m_TDhoodKS = new TDNumber(this, "Hood", "kS");
+        m_TDhoodKV = new TDNumber(this, "Hood", "kV");
+        m_TDhoodP = new TDNumber(this, "Hood", "P");
+        m_TDhoodI = new TDNumber(this, "Hood", "I");
+        m_TDhoodD = new TDNumber(this, "Hood", "D");
+
+        m_TDhoodKG.set(cfgDbl("hoodkG"));
+        m_TDhoodKS.set(cfgDbl("hoodkS"));
+        m_TDhoodKV.set(cfgDbl("hoodkV"));
+        m_TDhoodP.set(cfgDbl("hoodkP"));
+        m_TDhoodI.set(cfgDbl("hoodkI"));
+        m_TDhoodD.set(cfgDbl("hoodkD"));
+        
+        m_hoodKG = m_TDhoodKG.get();
+        m_hoodKS = m_TDhoodKS.get();
+        m_hoodKV = m_TDhoodKV.get();
+        m_hoodP = m_TDhoodP.get();
+        m_hoodI = m_TDhoodI.get();
+        m_hoodD = m_TDhoodD.get();
+
+        m_hoodConfig = new SparkMaxConfig();
+        m_hoodConfig.idleMode(IdleMode.kBrake);
+        m_hoodConfig.closedLoop
+                .pid(m_hoodP, m_hoodI, m_hoodD)
+                .positionWrappingEnabled(false);
+        m_hoodConfig.encoder
+            .positionConversionFactor(Constants.ShooterConstants.kHoodPositionConversion)
+            .velocityConversionFactor(Constants.ShooterConstants.kHoodVelocityConversion);
+
+        m_hoodAngleMotor.configure(m_hoodConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        m_hoodEncoder = m_hoodAngleMotor.getEncoder();
+        m_hoodClosedLoopController = m_hoodAngleMotor.getClosedLoopController();
+
+        m_hoodLimiter = new SparkCurrentLimitDetector(
+            m_hoodAngleMotor, 
+            Constants.ShooterConstants.kHoodStallDetectCurrent, 
+            Constants.ShooterConstants.kHoodStallSpeedTolerance);
+
+        TrapezoidProfile.Constraints hoodConstraints = new TrapezoidProfile.Constraints(
+            Constants.ShooterConstants.kHoodMaxVelocityDegreesPerSec, 
+            Constants.ShooterConstants.kHoodMaxAcceleration);
+        m_hoodProfile = new TrapezoidProfile(hoodConstraints);
+        m_hoodState = new TrapezoidProfile.State(m_hoodEncoder.getPosition(), 0.0);
+        m_hoodSetpoint = new TrapezoidProfile.State(m_hoodEncoder.getPosition(), 0.0);
+        m_hoodFF = new ElevatorFeedforward(m_hoodKS, m_hoodKG, m_hoodKV);
+
+        m_TDHoodMotorCurrent = new TDNumber(this, "Hood", "Motor Current");
+        m_TDHoodPosition = new TDNumber(this, "Hood", "Position");
+        m_TDHoodProfilePosition = new TDNumber(this, "Hood", "Profile Position");
+    }
+
+    public void setupChimney() {
 		m_chimneyMotor = new SparkFlex(cfgInt("chimneyMotorCANid"), MotorType.kBrushless);
 		m_chimneyConfig = new SparkFlexConfig();
 		m_chimneyConfig
@@ -187,7 +294,10 @@ public class Shooter extends SubsystemBase{
      * @param angle Position to approach in radians.
      */
     public void setHoodTarget(double angle) {
-        // TODO: implement hood target
+        double clampedAngle = MathUtil.clamp(angle, 
+            Constants.ShooterConstants.kHoodMinAngle, 
+            Constants.ShooterConstants.kHoodMaxAngle);
+        m_hoodSetpoint = new TrapezoidProfile.State(clampedAngle, 0.0);
     }
 
     /**
@@ -344,6 +454,63 @@ public class Shooter extends SubsystemBase{
 
         return 0;
     }
+
+    private void runHood() {
+        if(m_tuneHood) {
+                if (m_TDhoodP.get() != m_hoodP ||
+                m_TDhoodI.get() != m_hoodI ||
+                m_TDhoodD.get() != m_hoodD) {
+                    m_hoodP = m_TDhoodP.get();
+                    m_hoodI = m_TDhoodI.get();
+                    m_hoodD = m_TDhoodD.get();
+                    m_hoodConfig.closedLoop.pid(m_hoodP, m_hoodI, m_hoodD);
+                    m_hoodAngleMotor.configure(m_hoodConfig,  ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+                }
+                m_hoodKG = m_TDhoodKG.get();
+                m_hoodFF.setKg(m_hoodKG);
+                m_hoodKS = m_TDhoodKS.get();
+                m_hoodFF.setKs(m_hoodKS);
+                m_hoodKV = m_TDhoodKV.get();
+                m_hoodFF.setKv(m_hoodKV);
+        }
+        HardLimitDirection limit = m_hoodLimiter.check();
+        double hoodAngle = m_hoodEncoder.getPosition();
+        if(limit == HardLimitDirection.kFree){
+            m_hoodState = m_hoodProfile.calculate(Constants.schedulerPeriodTime, m_hoodState, m_hoodSetpoint);
+            double hoodFeedForward = m_hoodFF.calculate(m_hoodState.velocity);
+            m_hoodClosedLoopController.setSetpoint(m_hoodState.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, hoodFeedForward);
+        }
+        else if(limit == HardLimitDirection.kForward) {
+            if(m_hoodAngleMotor.getAppliedOutput() > 0){
+                m_hoodAngleMotor.set(0);
+            }
+            if(!MathUtil.isNear(Constants.ShooterConstants.kHoodMaxAngle, hoodAngle, Constants.ShooterConstants.kHoodToleranceDegrees)){
+                m_hoodEncoder.setPosition(Constants.ShooterConstants.kHoodMaxAngle);
+            }
+            if(m_hoodSetpoint.position > hoodAngle)
+            {
+                m_hoodState = new TrapezoidProfile.State(Constants.ShooterConstants.kHoodMaxAngle, 0.0);
+                m_hoodSetpoint = new TrapezoidProfile.State(Constants.ShooterConstants.kHoodMaxAngle, 0.0);
+            }
+        } 
+        else if (limit == HardLimitDirection.kReverse) {
+            if(m_hoodAngleMotor.getAppliedOutput() < 0){
+                m_hoodAngleMotor.set(0);
+            }
+            if(!MathUtil.isNear(Constants.ShooterConstants.kHoodMinAngle, hoodAngle, Constants.ShooterConstants.kHoodToleranceDegrees)){
+                m_hoodEncoder.setPosition(Constants.ShooterConstants.kHoodMinAngle);
+            }
+            if(m_hoodSetpoint.position < hoodAngle)
+            {
+                m_hoodState = new TrapezoidProfile.State(Constants.ShooterConstants.kHoodMinAngle, 0.0);
+                m_hoodSetpoint = new TrapezoidProfile.State(Constants.ShooterConstants.kHoodMinAngle, 0.0);
+            }
+        }
+
+        m_TDHoodPosition.set(hoodAngle);
+        m_TDHoodProfilePosition.set(m_hoodState.position);
+        m_TDHoodMotorCurrent.set(m_hoodAngleMotor.getOutputCurrent());
+    }
     
     @Override
     public void periodic() {
@@ -361,7 +528,7 @@ public class Shooter extends SubsystemBase{
             }
         }
 
-        if (cfgBool("flywheelEnabled")) {
+        if (m_flywheelEnabled) {
             double arbFF = m_flywheelFF.calculate(m_TDflywheelVelocity.get());
             m_flywheelLeftMotor.getClosedLoopController().setSetpoint(m_TDflywheelVelocity.get(), ControlType.kVelocity, ClosedLoopSlot.kSlot0, arbFF);
 
@@ -383,7 +550,7 @@ public class Shooter extends SubsystemBase{
             }
         }
 
-        if (cfgBool("turretEnabled")) {
+        if (m_turretEnabled) {
             m_TDturretTargetAngle.set(m_TDturretTargetAngle.get() + m_TDturretSpeed.get() * 1/50.0);
             Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
             TurretState state = FieldUtils.getInstance().inAllianceZone(m_Drive.getPose(), alliance) ? TurretState.SHOOTING : TurretState.FERRYING;
@@ -397,5 +564,11 @@ public class Shooter extends SubsystemBase{
 		if (cfgBool("chimneyEnabled")) {
 			m_TDchimneyMeasuredCurrent.set(m_chimneyMotor.getAppliedOutput());
 		}
+
+        if(m_hoodEnabled) {
+            runHood();
+        }
+
+        super.periodic();
     }
 }

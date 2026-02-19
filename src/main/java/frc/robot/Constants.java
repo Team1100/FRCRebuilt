@@ -18,6 +18,7 @@ import frc.robot.utils.vision.VisionConfig;
 
 public final class Constants {
     public static final String robotName = "robot360";
+    public static final double schedulerPeriodTime = 0.02;
 
     public static final class SwerveModuleConstants {
         public static final boolean kTurningEncoderInverted = true;
@@ -31,7 +32,7 @@ public final class Constants {
         public static final double kWheelDiameterMeters = 0.0762;
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
 
-        public static final int kDrivingMotorPinionTeeth = 12;
+        public static final int kDrivingMotorPinionTeeth = 13;
         public static final double kDrivingMotorReduction = (45.0*22)/(kDrivingMotorPinionTeeth*15);
 
         public static final double kVortexFreeSpeedRPM = 6784;
@@ -100,9 +101,9 @@ public final class Constants {
 
     public static final class AutoConstants {
         public static final double kMaxSpeedMetersPerSecond = 4.92;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 4.92;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 10;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-        public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+        public static final double kMaxAngularSpeedRadiansPerSecondSquared = 4*Math.PI;
 
 
         public static final double kPathFollowerMaxSpeed = AutoConstants.kMaxSpeedMetersPerSecond; // Max module speed, in m/s
@@ -141,6 +142,21 @@ public final class Constants {
 
     public static class ShooterConstants {
         public static final double kVelocityFactor = 1;
+
+        public static final double kHoodMotorFreeSpeed = Configuration.getInstance().getDouble("Shooter", "hoodMotorFreeSpeed");
+        public static final double kHoodPlanetaryRatio = Configuration.getInstance().getDouble("Shooter", "hoodPlanetaryRatio");
+        public static final double kHoodPinionTeeth = Configuration.getInstance().getDouble("Shooter", "hoodPinionTeeth");
+        public static final double kHoodLanternTeeth = Configuration.getInstance().getDouble("Shooter", "hoodLanternTeeth");
+
+        public static final double kHoodPositionConversion = 360 * kHoodPinionTeeth / (kHoodPlanetaryRatio * kHoodLanternTeeth);
+        public static final double kHoodVelocityConversion = kHoodPositionConversion / 60;
+        public static final double kHoodMaxVelocityDegreesPerSec = kHoodMotorFreeSpeed * kHoodVelocityConversion;
+        public static final double kHoodMaxAcceleration = Configuration.getInstance().getDouble("Shooter", "hoodMaxAcceleration");
+        public static final double kHoodStallDetectCurrent = 5; //amps
+        public static final double kHoodStallSpeedTolerance = 5; //Degrees per second
+        public static final double kHoodMaxAngle = Configuration.getInstance().getDouble("Shooter", "hoodMaxAngle");
+        public static final double kHoodMinAngle = Configuration.getInstance().getDouble("Shooter", "hoodMinAngle");
+        public static final double kHoodToleranceDegrees = 1.0;
     }
 
     public static final class OIConstants {

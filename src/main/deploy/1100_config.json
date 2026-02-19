@@ -71,8 +71,24 @@
         {"varName" : "turretPositionY", "value" : 0},
         {"varName" : "turretPositionZ", "value" : 0},
 
+        {"varName" : "hoodEnabled", "value" : false},
         {"varName" : "hoodAngleMotorCANid", "value" : 13},
-        {"varName" : "chimneyMotorCANid", "value" : 14}
+        {"varName" : "tuneHood", "value" : false},
+
+        {"varName" : "hoodkG", "value" : 0},
+        {"varName" : "hoodkS", "value" : 0},
+        {"varName" : "hoodkV", "value" : 0},
+        {"varName" : "hoodkP", "value" : 0},
+        {"varName" : "hoodkI", "value" : 0},
+        {"varName" : "hoodkD", "value" : 0},
+
+        {"varName" : "hoodPlanetaryRatio", "value" : 0.04},
+        {"varName" : "hoodPinionTeeth", "value" : 10},
+        {"varName" : "hoodLanternTeeth", "value" : 128},
+        {"varName" : "hoodMotorFreeSpeed", "value" : 5676},
+        {"varName" : "hoodMaxAcceleration", "value" : 720},
+        {"varName" : "hoodMaxAngle", "value" : 40},
+        {"varName" : "hoodMinAngle", "value": 0}
     ],
 
    "visionConfig" : [
@@ -150,10 +166,24 @@
         {"varName" : "turretPositionY", "value" : 0},
         {"varName" : "turretPositionZ", "value" : 0},
 
+        {"varName" : "hoodEnabled", "value" : true},
         {"varName" : "hoodAngleMotorCANid", "value" : 13},
-        {"varName" : "kP", "value" : 0},
-        {"varName" : "kI", "value" : 0},
-        {"varName" : "kD", "value" : 0}
+        {"varName" : "tuneHood", "value" : false},
+
+        {"varName" : "hoodkG", "value" : 0},
+        {"varName" : "hoodkS", "value" : 0},
+        {"varName" : "hoodkV", "value" : 0},
+        {"varName" : "hoodkP", "value" : 0},
+        {"varName" : "hoodkI", "value" : 0},
+        {"varName" : "hoodkD", "value" : 0},
+
+        {"varName" : "hoodPlanetaryRatio", "value" : 0.04},
+        {"varName" : "hoodPinionTeeth", "value" : 10},
+        {"varName" : "hoodLanternTeeth", "value" : 128},
+        {"varName" : "hoodMotorFreeSpeed", "value" : 5676},
+        {"varName" : "hoodMaxAcceleration", "value" : 720},
+        {"varName" : "hoodMaxAngle", "value" : 40},
+        {"varName" : "hoodMinAngle", "value": 0}
    ],
    "LED" : [
         {"varName" : "LEDPort", "value": 1},
