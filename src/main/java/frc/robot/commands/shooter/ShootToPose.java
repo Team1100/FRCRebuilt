@@ -6,10 +6,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.LED.LEDPattern;
+import frc.robot.subsystems.LED.LEDSection.Priority;
 import frc.robot.testingdashboard.Command;
 import frc.robot.testingdashboard.TDSendable;
 import frc.robot.utils.Configuration;
@@ -73,8 +75,10 @@ public class ShootToPose extends Command {
         m_Shooter.setHoodTarget(m_Shooter.pitchToHood(params.theta_pitch));
         m_Shooter.setFlywheelTarget(m_Shooter.velocityToRPM(params.velocity));
         if (m_Shooter.turretAtTarget() && m_Shooter.flywheelAtTarget() && m_Shooter.hoodAtTarget()) {
+			LED.getInstance().setPattern(1, LEDPattern.kCheckeredBlinkGreen, Priority.INFO);
             m_Shooter.chimneySpeed(cfg.getDouble("shooter", "chimneyUpSpeed"));
         } else {
+			LED.getInstance().setPattern(1, LEDPattern.kCheckeredBlinkYellow, Priority.INFO);
             m_Shooter.chimneyStop();
         }
 

@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Drive;
@@ -13,6 +14,7 @@ import frc.robot.utils.Referrable;
 import frc.robot.utils.SwerveDriveInputs;
 import frc.robot.utils.TriggerBuilder.RumbleIndicator;
 import frc.robot.utils.TriggerBuilder.SwitchIndicator;
+
 
 public class OI {
     private static OI m_OI;
@@ -58,6 +60,7 @@ public class OI {
 			.whileTrue(m_driverXboxController.a(), Drive.getInstance().sysIdQuasistatic(Direction.kReverse))
 			.whileTrue(m_driverXboxController.y(), Drive.getInstance().sysIdDynamic(Direction.kForward))
 			.whileTrue(m_driverXboxController.b(), Drive.getInstance().sysIdDynamic(Direction.kReverse))
+			.onTrue(m_driverXboxController.back(), new InstantCommand(()->Drive.getInstance().zeroHeading()))
 
 			.beginSubmap(Submap.AUTO)
 				.switchSubmap(driverIndicator, m_driverXboxController.start(), Submap.MANUAL)
@@ -86,7 +89,7 @@ public class OI {
 			.endSubmap()
 
 			.register();
-	}
+    }
 
     public XboxController getDriverController() {
         return m_driverXboxController.getHID();

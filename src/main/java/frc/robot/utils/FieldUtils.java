@@ -115,50 +115,71 @@ public class FieldUtils{
         return red || blue;
     }
 
-    public char getAutoWinner(){ 
+    public enum AutoWinner {
+        RED,
+        BLUE
+    }
+
+    public AutoWinner getAutoWinner(){ 
         String gameData = DriverStation.getGameSpecificMessage();
         if (gameData.length() > 0){
-            return (gameData.charAt(0)); // R or B
+            return (gameData.charAt(0) == 'R') ? AutoWinner.RED : AutoWinner.BLUE;
         } else {
-            return 'n'; //null
+            return null;
         }
     }
     public void startGameTimer(){
         timer.start();
     }
-    public char getGameState(){
+
+    public enum GameState {
+        AUTO,
+        TRANSITION,
+        RED_START,
+        BLUE_START,
+        ENDGAME
+    }
+
+    public GameState getGameState(){
         double time = timer.get();
-        char firstTeam;
-        char secondTeam = getAutoWinner();
-        if (secondTeam == 'R'){
-            firstTeam = 'B';
-        } else if (secondTeam == 'B') {
-            firstTeam = 'R';
+        AutoWinner winner = getAutoWinner();
+        GameState firstTeamHub;
+        GameState secondTeamHub;
+        if (winner == AutoWinner.RED){
+            firstTeamHub = GameState.BLUE_START;
+            secondTeamHub = GameState.RED_START;
+        } else if (winner == AutoWinner.BLUE) {
+            firstTeamHub = GameState.RED_START;
+            secondTeamHub = GameState.BLUE_START;
         } else {
-            firstTeam = 'n'; //null
+            firstTeamHub = null;
+            secondTeamHub = null;
         }
 
         if (time > 0 && time < 20){
-            return 'A'; //auto
+            return GameState.AUTO;
         } else if (time >= 20 && time < 30){
-            return 'T'; //transition
-        } else if (time >= 30 && time < 55){
-            return firstTeam;
-        } else if (time >= 55 && time < 80){
-            return secondTeam;
-        } else if (time >= 80 && time < 105){
-            return firstTeam;
-        } else if (time >= 105 && time < 130){
-            return secondTeam;
+            return GameState.TRANSITION;
+        } else if ((time >= 30 && time < 55) || (time >= 80 && time < 105)){
+            return firstTeamHub;
+        } else if ((time >= 55 && time < 80) || (time >= 105 && time < 130)){
+            return secondTeamHub;
         } else if (time >= 130 && time < 160){
-            return 'E'; //endgame
+            return GameState.ENDGAME;
         } else {
-            return 'n'; //null
+            return null;
         }
 
     }
     public double stateTimeLeft(){
-        return timer.getMatchTime(); //approximate
+        double matchTime = timer.get();
+        if (matchTime<20) return 20-matchTime;
+        if (matchTime<30) return 30-matchTime;
+        if (matchTime<55) return 55-matchTime;
+        if (matchTime<80) return 80-matchTime;
+        if (matchTime<105) return 105-matchTime;
+        if (matchTime<130) return 130-matchTime;
+        return 160-matchTime;
     }
     
 }

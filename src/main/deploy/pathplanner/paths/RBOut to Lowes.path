@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.2832043704710143,
+        "y": 1.4600832767210148
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.2818109664551638,
+        "y": 1.0266453256373609
+      },
+      "isLocked": false,
+      "linkedName": "RB Out"
+    },
+    {
+      "anchor": {
+        "x": 0.5172141644021737,
+        "y": 0.6570617074275367
+      },
+      "prevControl": {
+        "x": 0.9960215051243166,
+        "y": 0.8798021241906375
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "SideQuest"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

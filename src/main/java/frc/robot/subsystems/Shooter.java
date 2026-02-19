@@ -23,7 +23,6 @@ public class Shooter extends SubsystemBase{
     private static Shooter m_Shooter = null;
 
     private SparkFlex m_hoodAngleMotor;
-    private SparkFlex m_chimneyMotor;
 
     // Flywheel
     private SparkFlex m_flywheelLeftMotor;
@@ -68,6 +67,12 @@ public class Shooter extends SubsystemBase{
 
     private Drive m_Drive;
 
+	// Chimney
+	private SparkFlex m_chimneyMotor;
+	private SparkFlexConfig m_chimneyConfig;
+
+	private TDNumber m_TDchimneyMeasuredCurrent;
+
     private Shooter(){
         super("Shooter");
 
@@ -77,6 +82,8 @@ public class Shooter extends SubsystemBase{
         if (cfgBool("flywheelEnabled")) setupFlywheel();
 
         if (cfgBool("turretEnabled")) setupTurret();
+
+		if (cfgBool("chimneyEnabled")) setupChimney();
     }
 
     public static Shooter getInstance() {
@@ -155,6 +162,18 @@ public class Shooter extends SubsystemBase{
         m_Drive = Drive.getInstance();
     }
 
+	public void setupChimney() {
+		m_chimneyMotor = new SparkFlex(cfgInt("chimneyMotorCANid"), MotorType.kBrushless);
+		m_chimneyConfig = new SparkFlexConfig();
+		m_chimneyConfig
+			.idleMode(IdleMode.kCoast)
+			.smartCurrentLimit(cfgInt("chimneyRollerStallLimit"), cfgInt("chimneyRollerFreeLimit"));
+
+		m_chimneyMotor.configure(m_chimneyConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+		m_TDchimneyMeasuredCurrent = new TDNumber(this, "Chimney", "Measured Current");
+	}
+
     /**
      * Sets a target velocity for the flywheel.
      * @param rpm Velocity to approach in RPM.
@@ -182,11 +201,13 @@ public class Shooter extends SubsystemBase{
     }
 
     public void chimneySpeed(double speed) {
-        // TODO: implement chimneySpeed
+		if (m_chimneyMotor != null)
+			m_chimneyMotor.set(speed);
     }
 
     public void chimneyStop() {
-        // TODO: implement chimneyStop
+		if (m_chimneyMotor != null)
+			m_chimneyMotor.set(0);
     }
 
     public double getTurretTarget() {
@@ -200,9 +221,11 @@ public class Shooter extends SubsystemBase{
     public boolean turretAtTarget() {
         return MathUtil.isNear(m_TDturretTargetAngle.get(), m_turretMotor.getEncoder().getPosition(), cfgDbl("turretTolerance"));
     }
+
     public boolean flywheelAtTarget() {
         return MathUtil.isNear(m_TDflywheelVelocity.get(), m_turretMotor.getEncoder().getVelocity(), cfgDbl("flywheelTolerance"));
     }
+
     public boolean hoodAtTarget() {
         // TODO: implement hoodAtTarget
         return false;
@@ -370,5 +393,9 @@ public class Shooter extends SubsystemBase{
             m_TDturretMeasuredPosition.set(m_turretMotor.getAbsoluteEncoder().getPosition());
             m_TDturretMeasuredCurrent.set(m_turretMotor.getAppliedOutput());
         }
+
+		if (cfgBool("chimneyEnabled")) {
+			m_TDchimneyMeasuredCurrent.set(m_chimneyMotor.getAppliedOutput());
+		}
     }
 }
