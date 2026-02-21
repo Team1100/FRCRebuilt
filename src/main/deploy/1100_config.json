@@ -106,7 +106,12 @@
        {"varName" : "intakeEnabled", "value" : false},
        {"varName" : "intakeRollerCanId", "value" : 16},
        {"varName" : "intakeRollerStallLimit", "value" : 25},
-       {"varName" : "intakeRollerFreeLimit", "value" : 60}
+       {"varName" : "intakeRollerFreeLimit", "value" : 60},
+       {"varName" : "intakeDeployerCanId1", "value" : 17},
+       {"varName" : "intakeDeployerCanId2", "value" : 19},
+       {"varName" : "intakeDeployer2Invert", "value" : true},
+       {"varName" : "intakeDeployerStallLimit", "value" : 25},
+       {"varName" : "intakeDeployerFreeLimit", "value" : 60}
    ],
 
    "Chimney" : [
