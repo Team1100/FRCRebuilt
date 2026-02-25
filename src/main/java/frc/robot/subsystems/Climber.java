@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
@@ -55,6 +56,9 @@ public class Climber extends SubsystemBase {
   double m_climberkV = Constants.ClimberConstants.kClimberkV;
   double m_climberkA = Constants.ClimberConstants.kClimberkA;
   private double m_climberLastAngle = 0;
+
+  SparkFlex m_climberLeftSparkFlex;
+  SparkFlex m_climberRightSparkFlex;
 
   SparkBase m_climberLeftSpark;
   SparkBase m_climberRightSpark;
@@ -158,16 +162,32 @@ public class Climber extends SubsystemBase {
     return m_Climber;
   }
 
-  public void FunnyClimbAction() {
+  public void FunnyClimbAction(double commandedSpeed) {
+    double speed = commandedSpeed;
+    if(m_climberLeftSparkFlex != null) {
+      m_climberLeftSparkFlex.set(speed);
+    }
   }
 
   public void FunnyClimbAscendAction() {
+    if (m_climberLeftSparkFlex != null) {
+      m_climberLeftSparkFlex.set(Constants.ClimberConstants.kClimberSpeed);
+      m_motorSim.setInputVoltage(Constants.ClimberConstants.kClimberSpeed * 12);
+    }
   }
 
   public void FunnyClimbDescendAction() {
+    if (m_climberLeftSparkFlex != null) {
+      m_climberLeftSparkFlex.set(-Constants.ClimberConstants.kClimberSpeed);
+      m_motorSim.setInputVoltage(Constants.ClimberConstants.kClimberSpeed * 12);
+    }
   }
 
   public void FunnyClimbHaltAction() {
+    if (m_climberLeftSparkFlex != null) {
+      m_climberLeftSparkFlex.set(0.0);
+      m_motorSim.setInputVoltage(0);
+    }
   }
 
   public double getClimberTargetAngle() {
