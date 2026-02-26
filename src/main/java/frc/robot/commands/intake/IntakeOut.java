@@ -16,6 +16,8 @@ public class IntakeOut extends Command{
         m_intake = Intake.getInstance();
         m_intakeSpeed = Configuration.getInstance().getDouble("Intake", "intakeSpeed");
 
+        addRequirements(m_intake);
+
     }
 
     @Override 

@@ -102,6 +102,14 @@ public class Intake extends SubsystemBase{
         m_currentSpeed = speed;
     }
     
+    public boolean isDeployed(){
+        
+        if (m_deployMotor1.getEncoder().getPosition() > cfgDbl("intakeDeployedThreshold")){
+            return true;
+        } else {
+            return false;
+        }
+    }
     @Override
     public void periodic() {
         if (m_deploying){
@@ -123,6 +131,8 @@ public class Intake extends SubsystemBase{
             m_TDdeployerCurrentOutput.set(m_deployMotor1.getOutputCurrent());
         }
         super.periodic();
+
+        
     }
     
 }

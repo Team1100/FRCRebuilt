@@ -85,6 +85,7 @@ public class Shooter extends SubsystemBase{
     private TDNumber m_TDturretSpeed;
 
     private TDNumber m_TDturretMeasuredPosition;
+    private TDNumber m_TDturretProfilePosition;
     private TDNumber m_TDturretMeasuredCurrent;
 
     //Hood
@@ -131,8 +132,6 @@ public class Shooter extends SubsystemBase{
 
     private Shooter(){
         super("Shooter");
-
-        m_chimneyMotor = new SparkFlex(cfgInt("chimneyMotorCANid"), MotorType.kBrushless);
 
         m_flywheelEnabled = cfgBool("flywheelEnabled");
         m_turretEnabled = cfgBool("turretEnabled");
@@ -214,12 +213,12 @@ public class Shooter extends SubsystemBase{
         m_turretConfig = new SparkFlexConfig();
         m_turretConfig.closedLoop.pid(m_turretP, m_turretI, m_turretD);
         m_turretConfig.idleMode(IdleMode.kBrake);
-        m_turretConfig.encoder.positionConversionFactor(cfgDbl("turretPositionFactor"));
+        m_turretConfig.encoder.positionConversionFactor(Constants.ShooterConstants.kTurretPositionFactor);
         m_turretConfig.closedLoop.positionWrappingEnabled(false);
 
         m_turretMotor.configure(m_turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        Constraints constraints = new Constraints(cfgDbl("turretMaxVelocity"), cfgDbl("turretMaxAcceleration"));
+        Constraints constraints = new Constraints(Constants.ShooterConstants.kTurretMaxVelocity, Constants.ShooterConstants.kTurretMaxAccel);
         m_turretProfile = new TrapezoidProfile(constraints);
 
         m_TDturretKs = new TDNumber(this, "Turret", "Ks");
@@ -233,9 +232,15 @@ public class Shooter extends SubsystemBase{
 		    m_turretFF = new SimpleMotorFeedforward(m_TDturretKs.get(), m_TDturretKv.get(), m_TDturretKa.get());
 
         m_TDturretTargetAngle = new TDNumber(this, "Turret", "Target Angle");
+        m_TDturretSpeed = new TDNumber(this, "Turret", "Turret Speed");
 
         m_TDturretMeasuredPosition = new TDNumber(this, "Turret", "Measured Position");
         m_TDturretMeasuredCurrent = new TDNumber(this, "Turret", "Measured Current");
+        m_TDturretProfilePosition = new TDNumber(this, "Turret", "Profile Position");
+
+        double initPosition = m_turretMotor.getEncoder().getPosition();
+        m_turretSetpoint = new TrapezoidProfile.State(initPosition, 0.0);
+        m_turretState = new TrapezoidProfile.State(initPosition, 0.0);
 
         m_Drive = Drive.getInstance();
     }
@@ -392,7 +397,8 @@ public class Shooter extends SubsystemBase{
     // see angleToTarget for more info
     enum TurretState {
         SHOOTING, // direct movement, take the shortest available movement
-        FERRYING // indirect movement, try to get turret into the 'free range' closest to hub
+        FERRYING, // indirect movement, try to get turret into the 'free range' closest to hub
+        ROBOT_RELATIVE
     }
     /**
      * Get an angle relative to the field and transform it into an angle for
@@ -478,6 +484,9 @@ public class Shooter extends SubsystemBase{
                 // i wrote two paragraphs explaining why this single statement is cool
                 return robotTargetAngle%Math.PI;
             }
+            case ROBOT_RELATIVE: {
+                return targetAngle;
+            }
         }
 
         return 0;
@@ -502,22 +511,25 @@ public class Shooter extends SubsystemBase{
             m_turretFF.setKa(m_TDturretKa.get()); 
         }
 
-        m_TDturretTargetAngle.set(m_TDturretTargetAngle.get() + m_TDturretSpeed.get() * 1/50.0);
+        m_TDturretTargetAngle.set(m_TDturretTargetAngle.get() + m_TDturretSpeed.get() * Constants.schedulerPeriodTime);
         Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-        TurretState state = FieldUtils.getInstance().inAllianceZone(m_Drive.getPose(), alliance) ? TurretState.SHOOTING : TurretState.FERRYING;
+        TurretState state = m_tuneTurret? TurretState.ROBOT_RELATIVE :
+            (FieldUtils.getInstance().inAllianceZone(m_Drive.getPose(), alliance) ? TurretState.SHOOTING : TurretState.FERRYING);
         double controlledAngle = angleToTarget(m_TDturretTargetAngle.get(), state);
         m_turretSetpoint = new TrapezoidProfile.State(controlledAngle, m_TDturretSpeed.get());
 
-        m_turretState = m_turretProfile.calculate(1/50.0, m_turretState, m_turretSetpoint);
+        m_turretState = m_turretProfile.calculate(Constants.schedulerPeriodTime, m_turretState, m_turretSetpoint);
         double turretFF = m_turretFF.calculate(m_turretState.velocity);
 
         m_turretMotor.getClosedLoopController().setSetpoint(
-            controlledAngle, ControlType.kPosition,
+            m_turretState.position, ControlType.kPosition,
             ClosedLoopSlot.kSlot0,
             turretFF);
 
         m_TDturretMeasuredPosition.set(m_turretMotor.getEncoder().getPosition());
         m_TDturretMeasuredCurrent.set(m_turretMotor.getAppliedOutput());
+        m_TDturretProfilePosition.set(m_turretState.position);
+        
 	  }
 
     private void runHood() {

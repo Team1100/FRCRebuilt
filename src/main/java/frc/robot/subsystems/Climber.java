@@ -4,9 +4,12 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkClosedLoopController.ArbFFUnits;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkBase;
@@ -250,5 +253,11 @@ public class Climber extends SubsystemBase {
         setClimberTargetAngle(tmp);
       }
     }
+
+    m_climberState = m_climberProfile.calculate(Constants.schedulerPeriodTime, m_climberState, m_climberSetpoint);
+
+    double climberFeedForward = m_climberFeedForwardController.calculate(m_climberState.velocity);
+
+    m_climberClosedLoopController.setSetpoint(m_climberState.position, ControlType.kPosition, ClosedLoopSlot.kSlot0, climberFeedForward, ArbFFUnits.kVoltage);
   }
 }
