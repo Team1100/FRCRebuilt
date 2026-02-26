@@ -120,6 +120,7 @@ public class Shooter extends SubsystemBase{
     private TDNumber m_TDHoodMotorCurrent;
     private TDNumber m_TDHoodPosition;
     private TDNumber m_TDHoodProfilePosition;
+    private TDNumber m_TDHoodTargetPosition;
 
     private Drive m_Drive;
 
@@ -300,6 +301,7 @@ public class Shooter extends SubsystemBase{
         m_TDHoodMotorCurrent = new TDNumber(this, "Hood", "Motor Current");
         m_TDHoodPosition = new TDNumber(this, "Hood", "Position");
         m_TDHoodProfilePosition = new TDNumber(this, "Hood", "Profile Position");
+        m_TDHoodTargetPosition = new TDNumber(this, "Hood", "Hood Target Position");
     }
 
     public void setupChimney() {
@@ -550,6 +552,8 @@ public class Shooter extends SubsystemBase{
             m_hoodFF.setKs(m_hoodKS);
             m_hoodKV = m_TDhoodKV.get();
             m_hoodFF.setKv(m_hoodKV);
+
+            m_hoodSetpoint = new TrapezoidProfile.State(m_TDHoodTargetPosition.get(), 0.0);
         }
         HardLimitDirection limit = m_hoodLimiter.check();
         double hoodAngle = m_hoodEncoder.getPosition();

@@ -92,7 +92,7 @@
         {"varName" : "hoodkI", "value" : 0},
         {"varName" : "hoodkD", "value" : 0},
 
-        {"varName" : "hoodPlanetaryRatio", "value" : 0.04},
+        {"varName" : "hoodPlanetaryRatio", "value" : 20},
         {"varName" : "hoodPinionTeeth", "value" : 10},
         {"varName" : "hoodLanternTeeth", "value" : 128},
         {"varName" : "hoodMotorFreeSpeed", "value" : 5676},
@@ -188,7 +188,7 @@
 
         {"varName" : "flywheelVelocityFactor", "value" : 1},
 
-        {"varName" : "turretEnabled", "value" : true},
+        {"varName" : "turretEnabled", "value" : false},
         {"varName" : "turretRotationCANid", "value" : 10},
         {"varName" : "tuneTurret", "value" : false},
 
@@ -212,9 +212,9 @@
         {"varName" : "turretPositionY", "value" : 0},
         {"varName" : "turretPositionZ", "value" : 0},
 
-        {"varName" : "hoodEnabled", "value" : false},
-        {"varName" : "hoodAngleMotorCANid", "value" : 13},
-        {"varName" : "tuneHood", "value" : false},
+        {"varName" : "hoodEnabled", "value" : true},
+        {"varName" : "hoodAngleMotorCANid", "value" : 12},
+        {"varName" : "tuneHood", "value" : true},
 
         {"varName" : "hoodkG", "value" : 0},
         {"varName" : "hoodkS", "value" : 0},
@@ -223,14 +223,13 @@
         {"varName" : "hoodkI", "value" : 0},
         {"varName" : "hoodkD", "value" : 0},
 
-        {"varName" : "hoodPlanetaryRatio", "value" : 0.04},
+        {"varName" : "hoodPlanetaryRatio", "value" : 20},
         {"varName" : "hoodPinionTeeth", "value" : 10},
         {"varName" : "hoodLanternTeeth", "value" : 128},
         {"varName" : "hoodMotorFreeSpeed", "value" : 5676},
         {"varName" : "hoodMaxAcceleration", "value" : 720},
-        {"varName" : "hoodMaxAngle", "value" : 40},
-        {"varName" : "hoodMinAngle", "value": 0},
-
+        {"varName" : "hoodMaxAngle", "value" : 0},
+        {"varName" : "hoodMinAngle", "value": -40},
         {"varName" : "chimneyEnabled", "value": false},
         {"varName" : "chimneyMotorCANid", "value": 20}
         
