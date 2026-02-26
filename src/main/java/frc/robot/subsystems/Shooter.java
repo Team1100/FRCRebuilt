@@ -4,11 +4,13 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -50,6 +52,8 @@ public class Shooter extends SubsystemBase{
     private TDNumber m_TDflywheelKS;
     private TDNumber m_TDflywheelKV;
     private TDNumber m_TDflywheelKA;
+
+	private boolean m_tuneFlywheel;
 
     private SimpleMotorFeedforward m_flywheelFF;
 
@@ -124,15 +128,13 @@ public class Shooter extends SubsystemBase{
 
 	  // Chimney
     private final boolean m_chimneyEnabled;
-	  private SparkFlex m_chimneyMotor;
-	  private SparkFlexConfig m_chimneyConfig;
+    private SparkBase m_chimneyMotor;
+    private SparkBaseConfig m_chimneyConfig;
 
-	  private TDNumber m_TDchimneyMeasuredCurrent;
+    private TDNumber m_TDchimneyMeasuredCurrent;
 
-    private Shooter(){
+    private Shooter() {
         super("Shooter");
-
-        m_chimneyMotor = new SparkFlex(cfgInt("chimneyMotorCANid"), MotorType.kBrushless);
 
         m_flywheelEnabled = cfgBool("flywheelEnabled");
         m_turretEnabled = cfgBool("turretEnabled");
@@ -145,7 +147,7 @@ public class Shooter extends SubsystemBase{
         
         if (m_hoodEnabled) setupHood();
 
-		    if (m_chimneyEnabled) setupChimney();
+        if (m_chimneyEnabled) setupChimney();
     }
 
     public static Shooter getInstance() {
@@ -155,7 +157,7 @@ public class Shooter extends SubsystemBase{
         return m_Shooter;
     } 
 
-    public void setupFlywheel() {
+    private void setupFlywheel() {
         m_flywheelLeftMotor = new SparkFlex(cfgInt("leftFlywheelCANid"), MotorType.kBrushless);
         m_rightFlywheelMotor = new SparkFlex(cfgInt("rightFlywheelCANid"), MotorType.kBrushless);
 
@@ -175,6 +177,8 @@ public class Shooter extends SubsystemBase{
         m_TDflywheelKS.set(cfgDbl("flywheelKS"));
         m_TDflywheelKV.set(cfgDbl("flywheelKV"));
         m_TDflywheelKA.set(cfgDbl("flywheelKA"));
+
+		m_tuneFlywheel = cfgBool("tuneFlywheel");
 
         m_flywheelLeftConfig = new SparkFlexConfig();
         m_flywheelLeftConfig.closedLoop.pid(m_flywheelP, m_flywheelI, m_flywheelD);
@@ -196,7 +200,7 @@ public class Shooter extends SubsystemBase{
         m_TDflywheelMeasuredCurrent = new TDNumber(this, "Flywheel", "Measured Current");
     }
 
-    public void setupTurret() {
+    private void setupTurret() {
         m_tuneTurret = cfgBool("tuneTurret");
         m_turretMotor = new SparkFlex(cfgInt("turretRotationCANid"), MotorType.kBrushless);
 
@@ -230,7 +234,7 @@ public class Shooter extends SubsystemBase{
         m_TDturretKv.set(cfgDbl("turretKv"));
         m_TDturretKa.set(cfgDbl("turretKa"));
 
-		    m_turretFF = new SimpleMotorFeedforward(m_TDturretKs.get(), m_TDturretKv.get(), m_TDturretKa.get());
+        m_turretFF = new SimpleMotorFeedforward(m_TDturretKs.get(), m_TDturretKv.get(), m_TDturretKa.get());
 
         m_TDturretTargetAngle = new TDNumber(this, "Turret", "Target Angle");
 
@@ -240,7 +244,7 @@ public class Shooter extends SubsystemBase{
         m_Drive = Drive.getInstance();
     }
 
-    public void setupHood() {
+    private void setupHood() {
         m_tuneHood = cfgBool("tuneHood");
         m_hoodAngleMotor = new SparkMax(cfgInt("hoodAngleMotorCANid"), MotorType.kBrushless);
 
@@ -297,12 +301,13 @@ public class Shooter extends SubsystemBase{
         m_TDHoodProfilePosition = new TDNumber(this, "Hood", "Profile Position");
     }
 
-    public void setupChimney() {
-        m_chimneyMotor = new SparkFlex(cfgInt("chimneyMotorCANid"), MotorType.kBrushless);
-        m_chimneyConfig = new SparkFlexConfig();
+    private void setupChimney() {
+      	var chimneyMotorConfig = config().getMotorController("chimney");
+        m_chimneyMotor = chimneyMotorConfig.m_controller;
+        m_chimneyConfig = chimneyMotorConfig.m_config;
         m_chimneyConfig
           .idleMode(IdleMode.kCoast)
-          .smartCurrentLimit(cfgInt("chimneyRollerStallLimit"), cfgInt("chimneyRollerFreeLimit"));
+          .smartCurrentLimit(0, 0);
 
         m_chimneyMotor.configure(m_chimneyConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -579,21 +584,21 @@ public class Shooter extends SubsystemBase{
     
     @Override
     public void periodic() {
-        if (cfgBool("tuneFlywheelPID")) {
-            if (m_TDflywheelP.get() != m_flywheelP ||
-                m_TDflywheelI.get() != m_flywheelI ||
-                m_TDflywheelD.get() != m_flywheelD) {
-                m_flywheelP = m_TDflywheelP.get();
-                m_flywheelI = m_TDflywheelI.get();
-                m_flywheelD = m_TDflywheelD.get();
-
-                m_flywheelLeftConfig.closedLoop.pid(m_flywheelP, m_flywheelI, m_flywheelD);
-
-                m_flywheelLeftMotor.configure(m_flywheelLeftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-            }
-        }
-
         if (m_flywheelEnabled) {
+			if (m_tuneFlywheel) {
+				if (m_TDflywheelP.get() != m_flywheelP ||
+					m_TDflywheelI.get() != m_flywheelI ||
+					m_TDflywheelD.get() != m_flywheelD) {
+					m_flywheelP = m_TDflywheelP.get();
+					m_flywheelI = m_TDflywheelI.get();
+					m_flywheelD = m_TDflywheelD.get();
+
+					m_flywheelLeftConfig.closedLoop.pid(m_flywheelP, m_flywheelI, m_flywheelD);
+
+					m_flywheelLeftMotor.configure(m_flywheelLeftConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+				}
+			}
+
             double arbFF = m_flywheelFF.calculate(m_TDflywheelVelocity.get());
             m_flywheelLeftMotor.getClosedLoopController().setSetpoint(m_TDflywheelVelocity.get(), ControlType.kVelocity, ClosedLoopSlot.kSlot0, arbFF);
 

@@ -149,13 +149,6 @@
        {"varName" : "intakeDeployerFreeLimit", "value" : 60}
    ],
 
-   "Chimney" : [
-        {"varName" : "chimneyEnabled", "value" : false},
-        {"varName" : "chimneyMotorCANid", "value" : 14},
-        {"varName" : "chimneyStallLimit", "value" : 0},
-        {"varName" : "chimneyFreeLimit", "value" : 60}
-   ],
-
    "Shooter" : [
         {"varName" : "flywheelEnabled", "value" : false},
         {"varName" : "leftFlywheelCANid", "value" : 10},
@@ -231,7 +224,80 @@
         {"name":"Arducam_OV9782_B","positionT":{"x":0.0,"y":0.0,"z":0.0},"positionR":{"quaternion":{"W":1.0,"X":0.0,"Y":0.0,"Z":0.0}},"primaryStrat":"LOWEST_AMBIGUITY","backupStrat":"CLOSEST_TO_CAMERA_HEIGHT"},
         {"name":"Arducam_OV9782_C","positionT":{"x":0.0,"y":0.0,"z":0.0},"positionR":{"quaternion":{"W":1.0,"X":0.0,"Y":0.0,"Z":0.0}},"primaryStrat":"LOWEST_AMBIGUITY","backupStrat":"CLOSEST_TO_CAMERA_HEIGHT"}
   ]
+},
+
+"realbot" : {
+	"motorConfigs" : {
+		"frontRightDrive" :    {"cType":"SparkFlex", "mType":"kBrushless", "canid":8},
+		"frontRightTurning" :  {"cType":"SparkMax", "mType":"kBrushless", "canid":9},
+		"frontLeftDrive" :     {"cType":"SparkFlex", "mType":"kBrushless", "canid":2},
+		"frontLeftTurning" :   {"cType":"SparkMax", "mType":"kBrushless", "canid":3},
+		"backRightDrive" :     {"cType":"SparkFlex", "mType":"kBrushless", "canid":6},
+		"backRightTurning" :   {"cType":"SparkMax", "mType":"kBrushless", "canid":7},
+		"backLeftDrive" :      {"cType":"SparkFlex", "mType":"kBrushless", "canid":4},
+		"backLeftTurning" :    {"cType":"SparkMax", "mType":"kBrushless", "canid":5},
+		"chimney" : 		   {"cType":"SparkMax", "mType":"kBrushless", "canid":14},
+		"spindexer" :          {"cType":"SparkMax", "mType":"kBrushless", "canid":15},
+		"intakeRollerTop" :    {"cType":"SparkFlex", "mType":"kBrushless", "canid":16},
+		"intakeRollerBottom" : {"cType":"SparkFlex", "mType":"kBrushless", "canid":20}
+	},
+
+   	"Drive" : [
+       {"varName" : "DriveMotorFreeSpeed", "value" : 6784},
+       {"varName" : "WheelDiameter", "value" : 0.0762},
+       {"varName" : "PinionTeeth", "value" : 13},
+       {"varName" : "DrivingkP", "value" : 0.02},
+       {"varName" : "DrivingkI", "value" : 0.0},
+       {"varName" : "DrivingkD", "value" : 0.0},
+       {"varName" : "DrivingkS", "value" : 0.0187},
+       {"varName" : "DrivingkA", "value" : 0.0437},
+       {"varName" : "TurningkP", "value" : 1.0}
+	],
+
+	"Spindexer" : [
+		{"varName" : "spindexerEnabled", "value" : true},
+		{"varName" : "spindexerSpeed", "value" : 0.9},
+		{"varName" : "spindexerStallLimit", "value" : 20},
+		{"varName" : "spindexerFreeLimit", "value" : 40}
+	],
+
+	"Intake" : [
+		{"varName" : "rollerEnabled", "value" : true},
+
+		{"varName" : "rollerSpeed", "value" : 0.3}, 
+		{"varName" : "rollerStallLimit", "value" : 10},
+		{"varName" : "rollerFreeLimit", "value" : 40},
+
+		{"varName" : "deployerEnabled", "value" : false},
+		{"varName" : "deployerCanId1", "value" : 17},
+		{"varName" : "deployerCanId2", "value" : 19},
+		{"varName" : "deployer2Invert", "value" : true},
+		{"varName" : "deployerStallLimit", "value" : 25},
+		{"varName" : "deployerFreeLimit", "value" : 60}
+	],
+
+	"Shooter" : [
+		{"varName" : "flywheelEnabled", "value" : false},
+
+		{"varName" : "turretEnabled", "value" : false},
+
+		{"varName" : "chimneyEnabled", "value" : true},
+
+		{"varName" : "hoodEnabled", "value" : false}
+	],
+
+	"LED" : [
+		{"varName" : "LEDPort", "value": 1},
+		{"varName" : "stateChangeWarningTime", "value" : 1.5 }
+	],
+
+	"Climber" : [
+		{"varName" : "Enabled", "value" : false},
+		{"varName" : "motorCanId", "value" : 18}
+	],
+
+	"visionConfig" : [
+	]
 }
 
 }
-

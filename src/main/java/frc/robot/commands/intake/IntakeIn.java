@@ -4,18 +4,15 @@ import frc.robot.subsystems.Intake;
 import frc.robot.testingdashboard.Command;
 import frc.robot.utils.Configuration;
 
-public class IntakeOut extends Command{
+public class IntakeIn extends Command{
+    private final Intake m_intake;
+    private final double m_intakeSpeed;
 
-    Intake m_intake;
-    double m_intakeSpeed;
-    
-
-    public IntakeOut(){
-        super(Intake.getInstance(), "Intake", "IntakeOut");
+    public IntakeIn(){
+        super(Intake.getInstance(), "Intake", "IntakeIn");
 
         m_intake = Intake.getInstance();
         m_intakeSpeed = Configuration.getInstance().getDouble("Intake", "rollerSpeed");
-
     }
 
     @Override 
@@ -23,9 +20,7 @@ public class IntakeOut extends Command{
 
     @Override
     public void execute() {
-
-        m_intake.spinOut(m_intakeSpeed); 
-        //TODO use same variable as IntakeIn or vice versa 
+        m_intake.spinIn(m_intakeSpeed); 
     }
 
     @Override

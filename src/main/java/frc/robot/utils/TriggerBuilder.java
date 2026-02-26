@@ -52,8 +52,12 @@ public class TriggerBuilder<S> {
 	}
 
 	public TriggerBuilder<S> map(Trigger trigger, Command command, CommandConsumer commandConsumer) {
-		if (m_targetSubmap != null)
-			trigger = trigger.and(()->{return m_submapHolder.get() == m_targetSubmap;});
+		if (m_targetSubmap != null) {
+			S s = m_targetSubmap;
+			trigger = trigger.and(()->{
+				return m_submapHolder.get() == s;
+			});
+		}
 		m_bindings.add(new Binding(trigger, command, commandConsumer));
 		return this;
 	}
@@ -83,14 +87,13 @@ public class TriggerBuilder<S> {
 	public TriggerBuilder<S> switchSubmap(SwitchIndicator switchIndicator, Trigger trigger, S newSubmap) {
 		map(trigger, new StartEndCommand(
 			() -> {
-				if (m_submapHolder.get() == newSubmap) return;
-				m_submapHolder.set(newSubmap);
 				switchIndicator.accept(true);
 			},
 			() -> {
+				m_submapHolder.set(newSubmap);
 				switchIndicator.accept(false);
 			}
-		), Trigger::onTrue);
+		), Trigger::whileTrue);
 		return this;
 	}
 
@@ -113,6 +116,12 @@ public class TriggerBuilder<S> {
 
 		public void accept(boolean switching) {
 			m_controller.setRumble(RumbleType.kBothRumble, switching ? 1 : 0);
+		}
+	}
+
+	public static class PrintIndicator implements SwitchIndicator {
+		public void accept(boolean switching) {
+			System.out.println("Switching: " + switching);
 		}
 	}
 }
