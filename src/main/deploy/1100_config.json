@@ -148,11 +148,12 @@
    "Intake" : [
        {"varName" : "intakeEnabled", "value" : false},
        {"varName" : "intakeRollerCanId", "value" : 16},
-       {"varName" : "intakeSpeed", "value" : 1.0}, 
+       {"varName" : "intakeSpeed", "value" : 1.0},
        {"varName" : "intakeRollerStallLimit", "value" : 25},
        {"varName" : "intakeRollerFreeLimit", "value" : 60},
        {"varName" : "intakeDeployerCanId1", "value" : 17},
        {"varName" : "intakeDeployerCanId2", "value" : 19},
+       {"varName" : "intakeDeployerSpeed", "value" : 1.0},
        {"varName" : "intakeDeployer2Invert", "value" : true},
        {"varName" : "intakeDeployedThreshold", "value" : 0.0},
        {"varName" : "intakeDeployerStallLimit", "value" : 25},
@@ -162,6 +163,7 @@
    "Chimney" : [
         {"varName" : "chimneyEnabled", "value" : false},
         {"varName" : "chimneyMotorCANid", "value" : 14},
+        {"varName" : "chimneySpeed", "value" : 1.0},
         {"varName" : "chimneyStallLimit", "value" : 0},
         {"varName" : "chimneyFreeLimit", "value" : 60}
    ],
