@@ -1,5 +1,6 @@
 package frc.robot.commands.global;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Shooter;
@@ -30,7 +31,7 @@ public class Unjam extends Command{
 
         m_shooter = Shooter.getInstance();
         m_chimneySpeed = Configuration.getInstance().getDouble("Chimney", "chimneySpeed");
-        m_flywheelSpeed = Configuration.getInstance().getDouble("Shooter", "flywheelVelocityFactor"); //right variable?
+        m_flywheelSpeed = Constants.ShooterConstants.kFlywheelVelocityFactor; //right variable?
 
         addRequirements(m_intake);
         addRequirements(m_spindexer);

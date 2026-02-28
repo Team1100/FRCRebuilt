@@ -142,7 +142,8 @@ public final class Constants {
     }
 
     public static class ShooterConstants {
-        public static final double kVelocityFactor = 1;
+        public static final double kVelocityFactor = 1.0;
+        public static final double kFlywheelVelocityFactor = 1.0;
 
         public static final double kHoodMotorFreeSpeed = Configuration.getInstance().getDouble("Shooter", "hoodMotorFreeSpeed");
         public static final double kHoodPlanetaryRatio = Configuration.getInstance().getDouble("Shooter", "hoodPlanetaryRatio");
