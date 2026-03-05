@@ -135,7 +135,7 @@ public final class Constants {
         public static final double kMaxValidAmbiguity = 0.2;
         public static final double kMaxZError = 0.75;
         public static final double kMaxRollError = 0.5;
-        public static final double kMaxPitchError = 0.5;
+        public static final double kMaxPitchError = 1.5;
 
         public static final VisionConfig[] kLeafletVisionSystems = null;
         public static final VisionConfig[] kRebuiltVisionSystems = null;

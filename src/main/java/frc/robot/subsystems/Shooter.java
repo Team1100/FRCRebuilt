@@ -180,7 +180,7 @@ public class Shooter extends SubsystemBase{
         m_TDflywheelKv.set(cfgDbl("flywheelKv"));
         m_TDflywheelKa.set(cfgDbl("flywheelKa"));
 
-		m_tuneFlywheel = cfgBool("tuneFlywheelPID");
+		m_tuneFlywheel = cfgBool("tuneFlywheel");
 
         m_flywheelLeftConfig = new SparkFlexConfig();
         m_flywheelLeftConfig.closedLoop.pid(m_flywheelP, m_flywheelI, m_flywheelD);
@@ -191,7 +191,7 @@ public class Shooter extends SubsystemBase{
         m_rightFlywheelMotor.configure(rightConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         m_flywheelFF = new SimpleMotorFeedforward(
-            m_TDflywheelKv.get(), m_TDflywheelKs.get(), m_TDflywheelKa.get());
+            m_TDflywheelKs.get(), m_TDflywheelKv.get(), m_TDflywheelKa.get());
 
 		    m_turretTolerance = cfgDbl("turretTolerance");
 
@@ -218,9 +218,10 @@ public class Shooter extends SubsystemBase{
         m_turretD = m_TDturretD.get();
 
         m_turretConfig = new SparkFlexConfig();
-        m_turretConfig.closedLoop.pid(m_turretP, m_turretI, m_turretD);
+        m_turretConfig.inverted(true);
         m_turretConfig.idleMode(IdleMode.kBrake);
         m_turretConfig.encoder.positionConversionFactor(Constants.ShooterConstants.kTurretPositionFactor);
+        m_turretConfig.closedLoop.pid(m_turretP, m_turretI, m_turretD);
         m_turretConfig.closedLoop.positionWrappingEnabled(false);
 
         m_turretMotor.configure(m_turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -245,7 +246,7 @@ public class Shooter extends SubsystemBase{
         m_TDturretMeasuredCurrent = new TDNumber(this, "Turret", "Measured Current");
         m_TDturretProfilePosition = new TDNumber(this, "Turret", "Profile Position");
 
-        double initPosition = m_turretMotor.getEncoder().getPosition();
+        double initPosition = 0;
         m_turretSetpoint = new TrapezoidProfile.State(initPosition, 0.0);
         m_turretState = new TrapezoidProfile.State(initPosition, 0.0);
 
@@ -340,6 +341,7 @@ public class Shooter extends SubsystemBase{
             Constants.ShooterConstants.kHoodMinAngle, 
             Constants.ShooterConstants.kHoodMaxAngle);
         m_hoodSetpoint = new TrapezoidProfile.State(clampedAngle, 0.0);
+        m_TDHoodTargetPosition.set(clampedAngle);
     }
 
     /**
@@ -481,7 +483,7 @@ public class Shooter extends SubsystemBase{
                 double b = (robotAngle - robotTargetAngle) % Math.PI*2;
                 double shortestMotion = (a < b) ? -a : b;
 
-                double motion = shortestMotion;
+                double motion = freeMotion;//shortestMotion;
                 // fallback to free motion if shortest motion passes over limit
                 if (robotAngle + shortestMotion > softLimit || robotAngle + shortestMotion < -softLimit) {
                     motion = freeMotion;
@@ -522,9 +524,9 @@ public class Shooter extends SubsystemBase{
 
         m_TDturretTargetAngle.set(m_TDturretTargetAngle.get() + m_TDturretSpeed.get() * Constants.schedulerPeriodTime);
         Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-        TurretState state = m_tuneTurret? TurretState.ROBOT_RELATIVE :
+        TurretState state = m_tuneTurret ? TurretState.ROBOT_RELATIVE :
             (FieldUtils.getInstance().inAllianceZone(m_Drive.getPose(), alliance) ? TurretState.SHOOTING : TurretState.FERRYING);
-        double controlledAngle = angleToTarget(m_TDturretTargetAngle.get(), state);
+        double controlledAngle = angleToTarget(m_TDturretTargetAngle.get(), TurretState.FERRYING);//state);
         m_turretSetpoint = new TrapezoidProfile.State(controlledAngle, m_TDturretSpeed.get());
 
         double prevVelocity = m_turretState.velocity;

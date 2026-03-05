@@ -84,7 +84,7 @@
 
         {"varName" : "hoodEnabled", "value" : false},
         {"varName" : "hoodAngleMotorCANid", "value" : 13},
-        {"varName" : "tuneHood", "value" : false},
+        {"varName" : "tuneHood", "value" : true},
 
         {"varName" : "hoodKg", "value" : 0},
         {"varName" : "hoodKs", "value" : 0},
@@ -116,7 +116,7 @@
     ],
 
     "visionConfig" : [
-        {"name":"Arducam_OV9782_C","positionT":{"x":0.0,"y":0.0,"z":0.0},"positionR":{"quaternion":{"W":1.0,"X":0.0,"Y":0.0,"Z":0.0}},"primaryStrat":"LOWEST_AMBIGUITY","backupStrat":"CLOSEST_TO_CAMERA_HEIGHT"}
+        {"name":"Arducam_OV9782_C","translation":{"x":0.0,"y":0.0,"z":0.0},"rotation":{"quaternion":{"W":1.0,"X":0.0,"Y":0.0,"Z":0.0}},"primaryStrat":"LOWEST_AMBIGUITY","backupStrat":"CLOSEST_TO_CAMERA_HEIGHT"}
     ]
 },
 
@@ -171,7 +171,7 @@
         {"varName" : "leftFlywheelCANid", "value" : 13},
         {"varName" : "rightFlywheelCANid", "value" : 14},
 
-        {"varName" : "tuneFlywheelPID", "value": false},
+        {"varName" : "tuneFlywheel", "value": false},
         {"varName" : "flywheelP", "value": 0.00005},
         {"varName" : "flywheelI", "value": 0},
         {"varName" : "flywheelD", "value": 0.0002},
@@ -239,9 +239,56 @@
         {"varName" : "motorCanId", "value" : 18}
     ],
 
+    "Vision" : [
+        {"varName" : "Enabled", "value" : true}
+    ],
+
    "visionConfig" : [
-        {"name":"Arducam_OV9782_B","positionT":{"x":0.0,"y":0.0,"z":0.0},"positionR":{"quaternion":{"W":1.0,"X":0.0,"Y":0.0,"Z":0.0}},"primaryStrat":"LOWEST_AMBIGUITY","backupStrat":"CLOSEST_TO_CAMERA_HEIGHT"},
-        {"name":"Arducam_OV9782_C","positionT":{"x":0.0,"y":0.0,"z":0.0},"positionR":{"quaternion":{"W":1.0,"X":0.0,"Y":0.0,"Z":0.0}},"primaryStrat":"LOWEST_AMBIGUITY","backupStrat":"CLOSEST_TO_CAMERA_HEIGHT"}
+        {
+            "name": "Arducam_OV9782_B",
+            "translation": {
+                "x":0.0,
+                "y":0.0,
+                "z":0.0
+            },
+            "angles": {
+                "pitch":0.0,
+                "yaw":0.0,
+                "roll":0.0
+            },
+            "primaryStrat": "LOWEST_AMBIGUITY",
+            "backupStrat": "CLOSEST_TO_CAMERA_HEIGHT"
+        },
+        {
+            "name": "Arducam_OV9782_C",
+            "translation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "angles": {
+                "pitch": 0,
+                "yaw": 0,
+                "roll": 0
+            },
+            "primaryStrat": "LOWEST_AMBIGUITY",
+            "backupStrat": "CLOSEST_TO_CAMERA_HEIGHT"
+        },
+        {
+            "name": "Arducam_OV9782_D",
+            "translation": {
+                "x": 0.167,
+                "y": 0.0,
+                "z": 0.171
+            },
+            "angles": {
+                "pitch": 55,
+                "yaw": 0,
+                "roll": 90
+            },
+            "primaryStrat": "MULTI_TAG_PNP_ON_COPROCESSOR",
+            "backupStrat": "CLOSEST_TO_CAMERA_HEIGHT"
+        }
     ]
 },
 

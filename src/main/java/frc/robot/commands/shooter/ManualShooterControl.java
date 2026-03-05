@@ -1,5 +1,6 @@
 package frc.robot.commands.shooter;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants;
 import frc.robot.OI;
@@ -32,20 +33,31 @@ public class ManualShooterControl extends Command{
     public void execute() {
         XboxController operator = m_OI.getOperatorController();
 
-        m_turretAngle += operator.getLeftX() * Constants.schedulerPeriodTime;
-        m_turretAngle %= 360;
-        m_hoodAngle += operator.getRightY() * Constants.schedulerPeriodTime;
+        m_turretAngle += MathUtil.applyDeadband(operator.getLeftX(), 0.05) * Constants.schedulerPeriodTime * 0.5;
+        m_turretAngle = m_turretAngle%Math.PI;
+        m_hoodAngle += MathUtil.applyDeadband(operator.getRightY(), 0.05) * Constants.schedulerPeriodTime * 10.0;
         m_hoodAngle = Math.max(Math.min(m_hoodAngle, 0), -40);
 
         int pov = operator.getPOV();
 
         m_flywheelSpeed +=
-            ((pov == 0) ? Constants.schedulerPeriodTime : 0) -
-            ((pov == 180) ? Constants.schedulerPeriodTime : 0);
+            ((pov == 0) ? Constants.schedulerPeriodTime * 2000 : 0) -
+            ((pov == 180) ? Constants.schedulerPeriodTime * 2000 : 0);
         m_flywheelSpeed = Math.min(Math.max(m_flywheelSpeed, 0), 6000);
 
-        m_Shooter.setFlywheelTarget(m_flywheelSpeed);
         m_Shooter.setTurretTarget(m_turretAngle, 0);
+        m_Shooter.setFlywheelTarget(m_flywheelSpeed);
         m_Shooter.setHoodTarget(m_hoodAngle);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        m_Shooter.setFlywheelTarget(0);
+        m_Shooter.setHoodTarget(0);
     }
 }

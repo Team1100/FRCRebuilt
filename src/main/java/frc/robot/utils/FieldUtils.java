@@ -9,7 +9,11 @@ import java.util.Optional;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
@@ -113,6 +117,12 @@ public class FieldUtils{
         boolean red = (alliance == Alliance.Red) && (robotPose.getX() < FieldLocationConstants.kRedAllianceZoneX);
         boolean blue = (alliance == Alliance.Blue) && (robotPose.getX() > FieldLocationConstants.kBlueAllianceZoneX);
         return red || blue;
+    }
+
+    public Pose3d getHubPose(Alliance alliance) {
+        Transform3d tagToHub = new Transform3d(
+            new Translation3d(-Units.inchesToMeters(23.5), 0, 0), Rotation3d.kZero);
+        return getTagPose(getAllianceAprilTags().frontRightHub).transformBy(tagToHub);
     }
 
     public enum AutoWinner {

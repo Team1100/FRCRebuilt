@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.drive.JoystickHeadingDrive;
 import frc.robot.commands.intake.IntakeIn;
@@ -14,6 +15,7 @@ import frc.robot.commands.intake.IntakeOut;
 import frc.robot.commands.shooter.ChimneyDown;
 import frc.robot.commands.shooter.ChimneyUp;
 import frc.robot.commands.shooter.ManualShooterControl;
+import frc.robot.commands.shooter.TurretToHub;
 import frc.robot.commands.spindexer.SpindexerReverse;
 import frc.robot.commands.spindexer.SpindexerSpin;
 import frc.robot.subsystems.Drive;
@@ -76,22 +78,19 @@ public class OI {
 				.switchSubmap(driverIndicator, m_driverXboxController.start(), Submap.AUTO)
 			.endSubmap()
 
-			.beginSubmap(Submap.MANUAL)
-				/*.onTrue(m_driverXboxController.back(), new InstantCommand(()->Drive.getInstance().zeroHeading()))
-				.whileTrue(m_driverXboxController.rightBumper(), new JoystickHeadingDrive(m_driveInputs))
+			.onTrue(m_driverXboxController.back(), new InstantCommand(()->Drive.getInstance().zeroHeading()))
 
+			.beginSubmap(Submap.MANUAL)
+				/*
 				.whileTrue(m_driverXboxController.leftTrigger(), new IntakeIn())
 				.whileTrue(m_driverXboxController.rightTrigger(), new IntakeOut())
 
 				.whileTrue(m_driverXboxController.leftBumper(), new SpindexerSpin())
 
-				.whileTrue(m_driverXboxController.b(), new ChimneyUp())*/
+				.whileTrue(m_driverXboxController.b(), new ChimneyUp())
+				*/
 				
-				.whileTrue(m_driverXboxController.a(), Commands.run(
-					()->{System.out.println("Manual");}
-				))
-
-				.switchSubmap(driverIndicator, m_driverXboxController.b(), Submap.AUTO)
+				.switchSubmap(driverIndicator, m_driverXboxController.start(), Submap.AUTO)
 			.endSubmap()
 
 			.beginSubmap(Submap.AUTO)
@@ -101,14 +100,15 @@ public class OI {
 					new IntakeOut())
 				)
 
-				.switchSubmap(driverIndicator, m_driverXboxController.b(), Submap.MANUAL)
+				.switchSubmap(driverIndicator, m_driverXboxController.start(), Submap.MANUAL)
 			.endSubmap()
 
 			.register();
 
 		SwitchIndicator operatorIndicator = new RumbleIndicator(m_operatorXboxController.getHID());
 		new TriggerBuilder<Submap>(m_operatorSubmap)
-			.whileTrue(m_operatorXboxController.a(), new ManualShooterControl())
+			.map(m_operatorXboxController.a(), new ManualShooterControl(), Trigger::toggleOnTrue)
+			.whileTrue(m_operatorXboxController.b(), new TurretToHub())
 
 			.register();
     }
