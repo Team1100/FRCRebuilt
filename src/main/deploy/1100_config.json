@@ -156,16 +156,17 @@
         {"varName" : "intakeEnabled", "value" : false},
         {"varName" : "intakeRollerCanId", "value" : 16},
         {"varName" : "intakeSpeed", "value" : 1.0}, 
+        {"varName" : "intakeRollerUnjamSpeed", "value" : 0.5}, 
         {"varName" : "intakeRollerStallLimit", "value" : 25},
         {"varName" : "intakeRollerFreeLimit", "value" : 60},
         {"varName" : "intakeDeployerCanId1", "value" : 17},
         {"varName" : "intakeDeployerCanId2", "value" : 19},
         {"varName" : "intakeDeployer2Invert", "value" : true},
         {"varName" : "intakeDeployedThreshold", "value" : 0.0},
+        {"varName" : "intakeDeployerUnjamSpeed", "value" : 0.5}, 
         {"varName" : "intakeDeployerStallLimit", "value" : 25},
         {"varName" : "intakeDeployerFreeLimit", "value" : 60}
     ],
-
     "Shooter" : [
         {"varName" : "flywheelEnabled", "value" : true},
         {"varName" : "leftFlywheelCANid", "value" : 13},
@@ -179,8 +180,6 @@
         {"varName" : "flywheelKs", "value": 0.001},
         {"varName" : "flywheelKv", "value": 0.00185},
         {"varName" : "flywheelKa", "value": 0},
-
-        {"varName" : "flywheelVelocityFactor", "value" : 1},
 
         {"varName" : "turretEnabled", "value" : true},
         {"varName" : "turretRotationCANid", "value" : 10},
@@ -333,6 +332,7 @@
 	"Spindexer" : [
 		{"varName" : "spindexerEnabled", "value" : true},
 		{"varName" : "spindexerSpeed", "value" : 0.9},
+        {"varName" : "spindexerUnjamSpeed", "value" : 0.6},
 		{"varName" : "spindexerStallLimit", "value" : 20},
 		{"varName" : "spindexerFreeLimit", "value" : 40}
 	],
@@ -343,6 +343,9 @@
 		{"varName" : "rollerSpeed", "value" : 0.3}, 
 		{"varName" : "rollerStallLimit", "value" : 10},
 		{"varName" : "rollerFreeLimit", "value" : 40},
+
+        {"varName" : "rollerUnjamSpeed", "value" : 0.5},
+        {"varName" : "deployerUnjamSpeed", "value" : 0.5}, 
 
 		{"varName" : "deployerEnabled", "value" : false},
 
@@ -408,7 +411,10 @@
         {"varName" : "hoodMaxAngle", "value" : 0},
         {"varName" : "hoodMinAngle", "value": -40},
 
-		{"varName" : "chimneyEnabled", "value" : true}
+		{"varName" : "chimneyEnabled", "value" : true},
+
+        {"varName" : "chimneyUnjamSpeed", "value" : true},
+        {"varName" : "flywheelUnjamSpeed", "value" : true}
 	],
 
 	"LED" : [
