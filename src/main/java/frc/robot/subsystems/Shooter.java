@@ -70,6 +70,19 @@ public class Shooter extends SubsystemBase {
 
     private SparkBaseConfig m_turretConfig;
 
+    private SparkCurrentLimitDetector m_turretCurrentLimit;
+    private double m_turretForwardHardLimit;
+    private double m_turretReverseHardLimit;
+
+    private boolean m_turretCalibrationEnabled;
+    public enum TurretCalibration {
+        CALIBRATE_FORWARD,
+        CALIBRATE_FULL
+    }
+    private TurretCalibration m_turretCalibration;
+    private boolean m_turretCalibratedForward;
+    private boolean m_turretCalibratedReverse;
+
     private double m_turretP;
     private double m_turretI;
     private double m_turretD;
@@ -241,6 +254,12 @@ public class Shooter extends SubsystemBase {
         m_turretConfig.closedLoop.positionWrappingEnabled(false);
 
         m_turretMotor.configure(m_turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        
+        m_turretCurrentLimit = new SparkCurrentLimitDetector(m_turretMotor, cfgDbl("turretCurrentTrip"), cfgDbl("turretZeroSpeedTolerance"));
+        m_turretForwardHardLimit = cfgDbl("turretForwardHardLimit");
+        m_turretReverseHardLimit = cfgDbl("turretReverseHardLimit");
+
+        m_turretCalibrationEnabled = false;
 
         Constraints constraints = new Constraints(Constants.ShooterConstants.kTurretMaxVelocity,
                 Constants.ShooterConstants.kTurretMaxAccel);
@@ -554,7 +573,59 @@ public class Shooter extends SubsystemBase {
         return 0;
     }
 
+    public void enableTurretCalibration(TurretCalibration mode) {
+        m_turretCalibrationEnabled = true;
+        m_turretCalibratedForward = false;
+        m_turretCalibratedReverse = false;
+        m_turretCalibration = mode;
+    }
+
+    public boolean isTurretCalibrating() {
+        return m_turretCalibrationEnabled;
+    }
+
+    private void runTurretCalibration() {
+        switch (m_turretCalibration) {
+        case CALIBRATE_FORWARD: {
+            m_turretMotor.set(1);
+
+            HardLimitDirection hardLimit = m_turretCurrentLimit.check();
+            if (hardLimit == HardLimitDirection.kForward) {
+                m_turretMotor.getEncoder().setPosition(m_turretForwardHardLimit);
+                m_turretCalibratedForward = true;
+                
+                m_turretMotor.set(0);
+                m_turretCalibrationEnabled = false;
+            }
+
+            break;
+        }
+        case CALIBRATE_FULL: {
+            m_turretMotor.set(m_turretCalibratedForward ? -1 : 1);
+
+            HardLimitDirection hardLimit = m_turretCurrentLimit.check();
+            if (hardLimit == HardLimitDirection.kForward) {
+                m_turretCalibratedForward = true;
+                m_turretMotor.getEncoder().setPosition(0);
+            } else if (hardLimit == HardLimitDirection.kReverse) {
+                m_turretCalibratedReverse = true;
+
+                double range = m_turretMotor.getEncoder().getPosition();
+                m_turretMotor.getEncoder().setPosition(range/2.0);
+
+                m_turretMotor.set(0);
+                m_turretCalibrationEnabled = false;
+            }
+        }
+        }
+    }
+
     private void runTurret() {
+        if (m_turretCalibrationEnabled) {
+            runTurretCalibration();
+            return;
+        }
+
         if (m_tuneTurret) {
             if (m_TDturretP.get() != m_turretP ||
                     m_TDturretI.get() != m_turretI ||
@@ -574,11 +645,16 @@ public class Shooter extends SubsystemBase {
         }
 
         m_TDturretTargetAngle.set(m_TDturretTargetAngle.get() + m_TDturretSpeed.get() * Constants.schedulerPeriodTime);
+
         Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
         TurretState state = m_tuneTurret ? TurretState.ROBOT_RELATIVE
                 : (FieldUtils.getInstance().inAllianceZone(m_Drive.getPose(), alliance) ? TurretState.SHOOTING
                         : TurretState.FERRYING);
         double controlledAngle = angleToTarget(m_TDturretTargetAngle.get(), TurretState.FERRYING);// state);
+
+        if (controlledAngle > m_turretForwardHardLimit) controlledAngle = m_turretForwardHardLimit;
+        if (controlledAngle < m_turretReverseHardLimit) controlledAngle = m_turretReverseHardLimit;
+
         m_turretSetpoint = new TrapezoidProfile.State(controlledAngle, m_TDturretSpeed.get());
 
         double prevVelocity = m_turretState.velocity;
@@ -594,6 +670,12 @@ public class Shooter extends SubsystemBase {
         m_TDturretMeasuredCurrent.set(m_turretMotor.getAppliedOutput());
         m_TDturretProfilePosition.set(m_turretState.position);
 
+        HardLimitDirection hardLimit = m_turretCurrentLimit.check();
+        if (hardLimit == HardLimitDirection.kForward) {
+            m_turretMotor.getEncoder().setPosition(m_turretForwardHardLimit);
+        } else if (hardLimit == HardLimitDirection.kReverse) {
+            m_turretMotor.getEncoder().setPosition(m_turretReverseHardLimit);
+        }
     }
 
     private void runHood() {
