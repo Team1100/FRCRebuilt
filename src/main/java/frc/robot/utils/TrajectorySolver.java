@@ -7,14 +7,14 @@ public class TrajectorySolver {
         public double velocity;
         public double theta_yaw;
         public double theta_pitch;
+
+        public double time;
     }
 
     public static class TrajectoryConditions {
         // required
         public Pose3d start;
         public Pose3d target;
-
-        public double time = 1;
 
         // control variables, only one needed
         public double theta;
@@ -42,32 +42,88 @@ public class TrajectorySolver {
                 .minus(conditions.target.toPose2d().getTranslation())
                 .getAngle().getRadians();
 
-        double vx = dx/conditions.time;
-
         switch (type) {
             case CONTROL_THETA: {
-                // dy = vyt + 1/2at2
-                // vy = dy/t - 1/2at
-                double vy = (dy/conditions.time - (0.5 * -9.8 * conditions.time));
-                double velocity = Math.sqrt(vx*vx+vy*vy);
+                /*
+                 * Ready for some math?
 
-                TrajectoryParameters parameters = new TrajectoryParameters();
-                parameters.velocity = velocity;
-                parameters.theta_yaw = theta_yaw;
-                parameters.theta_pitch = conditions.theta;
+                 * 	vx = vcos(theta)
+                 *  vy = vsin(theta)
+                 *  v = vx/cos(theta)
+                 *  v = vy/sin(theta)
 
-                return parameters;
+                 *  dx = vxt
+                 *  vx = dx/t
+
+                 *  dy = vyt + 1/2att
+                 *  vyt = dy - att/2Math.sqrt((2*dy*Math.cos(th) - 2*dx*Math.sin(th))/(-9.8*Math.cos(th)));
+                 *  vy = (dy - att/2)/t
+
+                 *  v = (dx)/tcos(theta)
+                 *  v = (dy - att/2)/tsin(theta)
+
+                 *  dx/tcos(theta) = (dy - 1/2att)/tsin(theta)
+                 *  (dy - att/2)tcos(theta) = dxtsin(theta)
+                 *  (dy - att/2)cos(theta) = dxsin(theta)
+                 *  dycos(theta) - attcos(theta)/2 = dxsin(theta)
+                 *  attcos(theta)/2 = dycos(theta) - dxsin(theta)
+                 *  attcos(theta) = 2dycos(theta) - 2dxsin(theta)
+                 *  t = sqrt((2dycos(theta) - 2dxsin(theta))/(acos(theta)))
+
+                 *  vx = dx/t
+                 *  v = vx/cos(theta)
+                 *  v = dx/tcos(theta)
+                 *  v = dx/sqrt((2dycos(theta) - 2dxsin(theta))/(acos(theta)))cos(theta)
+                 */
+                double th = conditions.theta;
+
+                double t = Math.sqrt((2*dy*Math.cos(th) - 2*dx*Math.sin(th))/(-9.8*Math.cos(th)));Math.sqrt((2*dy*Math.cos(th) - 2*dx*Math.sin(th))/(-9.8*Math.cos(th)));
+                double vx = dx/t;
+                double v = vx/Math.cos(th);
+
+                TrajectoryParameters params = new TrajectoryParameters();
+                params.velocity = v;
+                params.theta_pitch = th;
+                params.theta_yaw = theta_yaw;
+                params.time = t;
+
+                return params;
             } case CONTROL_VELOCITY: {
-                // vx = vsin(theta)
-                // theta = asin(vx/v)
-                double theta_pitch = Math.asin(vx/conditions.velocity);
+                // vx = vcos(theta)
+                // theta = acos(vx/v)
+                /*double theta_pitch = Math.acos(vx/conditions.velocity);
 
                 TrajectoryParameters parameters = new TrajectoryParameters();
                 parameters.velocity = conditions.velocity;
                 parameters.theta_yaw = theta_yaw;
                 parameters.theta_pitch = theta_pitch;
-                return parameters;
-            } default: return null;
+                return parameters;*/
+                return null;
+            } default: {
+                return null;
+            }
         }
     }    
 }
+
+
+/*
+
+	CONTROLS:
+	ax,ay
+	bx,by
+	cx,cy
+
+	ay = a(ax)^2 + b(ax) + c
+	by = a(bx)^2 + b(bx) + c
+	cy = a(cx)^2 + b(cx) + c
+
+	0 = a(ax)^2 + b(ax) + c - ay
+	0 = a(bx)^2 + b(bx) + c - by
+	0 = a(cx)^2 + b(cx) + c - cy
+
+	a(ax)^2 + b(ax) + c - ay = a(bx)^2 + b(bx) + c - by = a(cx)^2 + b(cx) + c - cy
+
+
+
+ */

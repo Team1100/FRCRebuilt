@@ -118,12 +118,12 @@ public class ShootToPose extends Command {
             m_Shooter.chimneyStop();
         }
 
-        updateTrajectoryDisplay(conditions);
+        updateTrajectoryDisplay(conditions, params);
     }
 
-    private void updateTrajectoryDisplay(TrajectoryConditions conditions) {
+    private void updateTrajectoryDisplay(TrajectoryConditions conditions, TrajectoryParameters params) {
         for (int i = 0; i < m_displayRes; i++) {
-            double t = (conditions.time/(double)m_displayRes)/(i/(double)m_displayRes);
+            double t = i/(double)(m_displayRes-1);
             Pose2d pose = conditions.start.interpolate(conditions.target, t).toPose2d();
             m_trajectoryDisplay.getObject("point" + i).setPose(pose);
         }
