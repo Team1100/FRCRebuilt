@@ -12,12 +12,15 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.drive.JoystickHeadingDrive;
 import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeOut;
+import frc.robot.commands.shooter.StopTurretCalibration;
+import frc.robot.commands.shooter.CalibrateTurretFull;
 import frc.robot.commands.shooter.ChimneyDown;
 import frc.robot.commands.shooter.ChimneyUp;
 import frc.robot.commands.shooter.ManualShooterControl;
 import frc.robot.commands.spindexer.SpindexerReverse;
 import frc.robot.commands.spindexer.SpindexerSpin;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Shooter;
 import frc.robot.utils.TriggerBuilder;
 import frc.robot.utils.Referrable;
 import frc.robot.utils.drive.SwerveDriveInputs;
@@ -107,6 +110,10 @@ public class OI {
 				new SpindexerSpin(),
 				new IntakeIn())
 			)
+
+			.onTrue(m_operatorXboxController.povLeft(), new StopTurretCalibration())
+			.onTrue(m_operatorXboxController.povRight(), new CalibrateTurretFull())
+			.onTrue(m_operatorXboxController.povDown(), new StopTurretCalibration())
 
 			.register();
     }

@@ -367,7 +367,7 @@
 
         {"varName" : "turretEnabled", "value" : true},
 
-        {"varName" : "tuneTurret", "value" : false},
+        {"varName" : "tuneTurret", "value" : true},
 
         {"varName" : "turretP", "value": 0.50},
         {"varName" : "turretI", "value": 0},
@@ -384,6 +384,11 @@
         {"varName" : "turretDeadzoneStart", "value": 6.28319},
         {"varName" : "turretHardLimit", "value" : 9.942478},
         {"varName" : "turretSoftLimit", "value" : 9.942478},
+
+        {"varName" : "turretForwardHardLimit", "value" : 3.665},
+        {"varName" : "turretReverseHardLimit", "value" : -3.665},
+        {"varName" : "turretCurrentTrip", "value" : 10},
+        {"varName" : "turretZeroSpeedTolerance", "value" : 0.1},
 
         {"varName" : "turretPositionX", "value" : 0},
         {"varName" : "turretPositionY", "value" : 0},
