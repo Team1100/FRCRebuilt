@@ -3,9 +3,9 @@ package frc.robot.utils;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -84,16 +84,43 @@ public class TriggerBuilder<S> {
 		return this;
 	}
 
+	private static class SwitchSubmapCommand<S> extends Command {
+		private final double m_time;
+		private final Trigger m_trigger;
+		private final SwitchIndicator m_switchIndicator;
+		private final Referrable<S> m_submapHolder;
+		private final S m_newSubmap;
+
+		public SwitchSubmapCommand(Trigger trigger, SwitchIndicator switchIndicator, Referrable<S> submapHolder, S newSubmap) {
+			m_time = Timer.getFPGATimestamp();
+			m_trigger = trigger;
+			m_switchIndicator = switchIndicator;
+			m_submapHolder = submapHolder;
+			m_newSubmap = newSubmap;
+		}
+
+		@Override
+		public void initialize() {
+			m_switchIndicator.accept(true);
+		}
+
+		@Override
+		public void execute() {}
+
+		@Override
+		public void end(boolean interrupted) {
+			m_submapHolder.set(m_newSubmap);
+			m_switchIndicator.accept(false);
+		}
+
+		@Override
+		public boolean isFinished() {
+			return (Timer.getFPGATimestamp() > m_time + 0.5) && !m_trigger.getAsBoolean();
+		}
+	}
+
 	public TriggerBuilder<S> switchSubmap(SwitchIndicator switchIndicator, Trigger trigger, S newSubmap) {
-		map(trigger, new StartEndCommand(
-			() -> {
-				switchIndicator.accept(true);
-			},
-			() -> {
-				m_submapHolder.set(newSubmap);
-				switchIndicator.accept(false);
-			}
-		), Trigger::whileTrue);
+		onTrue(trigger, new SwitchSubmapCommand<S>(trigger, switchIndicator, m_submapHolder, newSubmap));
 		return this;
 	}
 

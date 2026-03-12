@@ -122,23 +122,27 @@ public class OI {
 			.beginSubmap(Submap.AUTO)
 				.whileTrue(m_operatorXboxController.rightBumper(), Commands.parallel(
 					new ChimneyUp(),
-					new SpindexerSpin(),
-					new IntakeIn())
-				)
+					new SpindexerSpin()
+				))
+
+				.whileTrue(m_operatorXboxController.b(), Commands.parallel(
+					new ChimneyDown(),
+					new SpindexerReverse()
+				))
 
 				.whileTrue(m_operatorXboxController.leftBumper(), new ShootToPose(() -> {
 					return FieldUtils.getInstance().getHubPose(DriverStation.getAlliance().orElse(Alliance.Blue));
 				}))
 
-				// point blank
-				.whileTrue(m_operatorXboxController.povUp(), new ShootSpecified(3120, -1, 0))
+				// midfield
+				.whileTrue(m_operatorXboxController.povUp(), new ShootSpecified(3000, -18, 0))
 				// left trench
-				.whileTrue(m_operatorXboxController.povUpLeft(), new ShootSpecified(3120, -21.8, 0.13))
+				.whileTrue(m_operatorXboxController.povUpLeft(), new ShootSpecified(3000, -21.8, 0.13))
 				// right trench
-				.whileTrue(m_operatorXboxController.povUpRight(), new ShootSpecified(3120, -21.8, -0.35))
+				.whileTrue(m_operatorXboxController.povUpRight(), new ShootSpecified(3000, -21.8, -0.35))
 
 				// ladder
-				.whileTrue(m_operatorXboxController.povDown(), new ShootSpecified(2900, -25, 0))
+				.whileTrue(m_operatorXboxController.povDown(), new ShootSpecified(3100, -25, 0))
 				// left corner
 				.whileTrue(m_operatorXboxController.povDownLeft(), new ShootSpecified(3400, -35, -0.77))
 				// right corner
@@ -159,9 +163,8 @@ public class OI {
 					new IntakeIn())
 				)
 
-				//.onTrue(m_operatorXboxController.povLeft(), new StopTurretCalibration())
-				//.onTrue(m_operatorXboxController.povRight(), new CalibrateTurretFull())
-				//.onTrue(m_operatorXboxController.povDown(), new StopTurretCalibration())
+				.onTrue(m_operatorXboxController.x(), new StopTurretCalibration())
+				.onTrue(m_operatorXboxController.b(), new CalibrateTurretFull())
 
 				.switchSubmap(operatorIndicator, m_operatorXboxController.start(), Submap.AUTO)
 			.endSubmap()

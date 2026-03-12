@@ -122,6 +122,8 @@ public class Shooter extends SubsystemBase {
 
     private Pose3d m_turretPose;
 
+    private boolean m_turretRobotRelative;
+
     // Hood
     private final boolean m_hoodEnabled;
 
@@ -313,6 +315,8 @@ public class Shooter extends SubsystemBase {
         double initPosition = 0;
         m_turretSetpoint = new TrapezoidProfile.State(initPosition, 0.0);
         m_turretState = new TrapezoidProfile.State(initPosition, 0.0);
+
+        m_turretRobotRelative = cfgBool("turretRobotRelative");
     }
 
     private void setupHood() {
@@ -597,6 +601,10 @@ public class Shooter extends SubsystemBase {
         return 0;
     }
 
+    public void setTurretRobotRelative(boolean rr) {
+        m_turretRobotRelative = rr;
+    }
+
     public void enableTurretCalibration(TurretCalibration mode) {
         m_turretCalibrationEnabled = true;
         m_turretCalibratedForward = false;
@@ -687,7 +695,7 @@ public class Shooter extends SubsystemBase {
         m_TDturretTargetAngle.set(m_TDturretTargetAngle.get() + m_TDturretSpeed.get() * Constants.schedulerPeriodTime);
 
         Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-        TurretState state = m_tuneTurret ? TurretState.ROBOT_RELATIVE
+        TurretState state = (m_tuneTurret || m_turretRobotRelative) ? TurretState.ROBOT_RELATIVE
                 : (FieldUtils.getInstance().inAllianceZone(m_Drive.getPose(), alliance) ? TurretState.SHOOTING
                         : TurretState.FERRYING);
         double controlledAngle = angleToTarget(m_TDturretTargetAngle.get(), state);
