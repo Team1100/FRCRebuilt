@@ -4,11 +4,14 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.drive.SwerveDrive;
+import frc.robot.commands.shooter.ShootToPose;
 import frc.robot.commands.vision.DisablePoseUpdates;
 import frc.robot.commands.vision.EnablePoseUpdates;
 import frc.robot.subsystems.Climber;
@@ -19,6 +22,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Vision;
 import frc.robot.testingdashboard.TestingDashboard;
+import frc.robot.utils.FieldUtils;
 import frc.robot.utils.drive.MAXSwerveModule;
 
 public class RobotContainer {
@@ -60,6 +64,8 @@ public class RobotContainer {
   private void registerCommands() {
     new DisablePoseUpdates();
     new EnablePoseUpdates();
+
+    NamedCommands.registerCommand("ShootToHub", new ShootToPose(FieldUtils.getInstance()::getHubPose));
   }
 
   private void configureBindings() {
