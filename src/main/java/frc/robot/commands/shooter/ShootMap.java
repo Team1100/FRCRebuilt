@@ -154,7 +154,7 @@ public class ShootMap extends Command {
             Rotation2d angle;
             if (m_target == Target.SHOOT_HUB) {
                 Pose3d turretPose = m_Shooter.getTurretPose();
-                Pose3d hubPose = FieldUtils.getInstance().getHubPose(m_alliance);
+                Pose3d hubPose = FieldUtils.getInstance().getHubPose();
                 angle = FieldUtils.getInstance().getAngleToPose(turretPose.toPose2d(), hubPose.toPose2d());
             } else angle = m_alliance == Alliance.Blue ? Rotation2d.kZero : Rotation2d.k180deg;
             turretAngle = angle.getRadians();
