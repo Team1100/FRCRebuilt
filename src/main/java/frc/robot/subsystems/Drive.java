@@ -466,7 +466,7 @@ public class Drive extends SubsystemBase {
 
   //Zeros the heading of the robot
   public void zeroHeading() {
-    m_gyro.reset();
+    m_DrivePoseEstimator.resetRotation(Rotation2d.kZero);
   }
 
   /*

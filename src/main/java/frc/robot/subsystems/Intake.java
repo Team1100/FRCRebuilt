@@ -128,12 +128,14 @@ public class Intake extends SubsystemBase {
                 m_deployMotor1.set(m_currentSpeed);
             } else {
                 m_deployMotor1.set(0);
+                m_currentSpeed = 0;
             }
         } else {
             if (m_deployLimitDetector.check() != HardLimitDirection.kReverse){
                 m_deployMotor1.set(-m_currentSpeed);
             } else {
                 m_deployMotor1.set(0);
+                m_currentSpeed = 0;
             }
         }
         m_TDdeployerCurrentOutput.set(m_deployMotor1.getOutputCurrent());

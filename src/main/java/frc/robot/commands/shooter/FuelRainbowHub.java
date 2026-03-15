@@ -3,11 +3,11 @@ package frc.robot.commands.shooter;
 import frc.robot.subsystems.Shooter;
 import frc.robot.testingdashboard.Command;
 
-public class FuelRainbowLeftTrench extends Command {
+public class FuelRainbowHub extends Command {
     private final Shooter m_Shooter;
 
-    public FuelRainbowLeftTrench() {
-        super(Shooter.getInstance(), "Shooting", "FuelRainbowLeftTrench");
+    public FuelRainbowHub() {
+        super(Shooter.getInstance(), "Shooting", "FuelRainbowHub");
 
         m_Shooter = Shooter.getInstance();
 
@@ -19,9 +19,9 @@ public class FuelRainbowLeftTrench extends Command {
     
     @Override
     public void execute() {
-        m_Shooter.setFlywheelTarget(3000);
-        m_Shooter.setHoodTarget(-21.8);
-        m_Shooter.setTurretTarget(0.13, 0);
+        m_Shooter.setFlywheelTarget(3400);
+        m_Shooter.setHoodTarget(-5);
+        m_Shooter.setTurretTarget(0, 0);
     }
 
     @Override

@@ -18,7 +18,7 @@ import frc.robot.commands.drive.JoystickHeadingDrive;
 import frc.robot.commands.intake.DeployerIn;
 import frc.robot.commands.intake.DeployerOut;
 import frc.robot.commands.intake.IntakeIn;
-import frc.robot.commands.intake.IntakeOut;
+import frc.robot.commands.intake.IntakeAAAAA;
 import frc.robot.commands.shooter.StopTurretCalibration;
 import frc.robot.commands.shooter.CalibrateTurretFull;
 import frc.robot.commands.shooter.ChimneyDown;
@@ -112,8 +112,10 @@ public class OI {
 				.whileTrue(m_driverXboxController.x(), new DeployerIn())
 
 				.whileTrue(m_driverXboxController.leftBumper(), new IntakeIn())
+				.whileTrue(m_driverXboxController.rightBumper(), new IntakeAAAAA())
 
-				.whileTrue(m_driverXboxController.rightBumper(), new JoystickHeadingDrive(m_driveInputs))
+				.whileTrue(m_driverXboxController.leftTrigger(), new IntakeAAAAA())
+				.whileTrue(m_driverXboxController.rightTrigger(), new JoystickHeadingDrive(m_driveInputs))
 
 				.whileTrue(m_driverXboxController.povUp(), Commands.startEnd(
 					()->{Climber.getInstance().setClimberTargetAngle(5);},

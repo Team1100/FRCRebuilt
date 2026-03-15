@@ -1,12 +1,18 @@
 package frc.robot.subsystems;
 
 import frc.robot.testingdashboard.SubsystemBase;
+import frc.robot.testingdashboard.TDSendable;
 import frc.robot.utils.FieldUtils;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class LED extends SubsystemBase{
     public static class LEDPattern {
@@ -245,6 +251,8 @@ public class LED extends SubsystemBase{
 
 	private LEDPattern m_fallbackPattern;
 
+	private Mechanism2d m_stageMechanism;
+
     private LED() {
         super("LED");
 
@@ -256,6 +264,11 @@ public class LED extends SubsystemBase{
         m_sections = new LEDSection[3];
 
         m_LED.start();
+
+		m_stageMechanism = new Mechanism2d(1, 1);
+		m_stageMechanism.setBackgroundColor(new Color8Bit(0, 0, 0));
+		new TDSendable(this, "StageIndicator", "StageIndicator", m_stageMechanism);
+		SmartDashboard.putData(m_stageMechanism);
     }
 
     public static LED getInstance() {
@@ -303,30 +316,45 @@ public class LED extends SubsystemBase{
 
     public void gameStateLights() {
         FieldUtils.GameState gameState = FieldUtils.getInstance().getGameState();
-        double currentMatchTime = FieldUtils.getInstance().stateTimeLeft();
-        if (currentMatchTime < cfgDbl("stateChangeWarningTime")){
+        double stateTimeLeft = FieldUtils.getInstance().stateTimeLeft();
+        if (stateTimeLeft < cfgDbl("stateChangeWarningTime")){
 			setPattern(0, LEDPattern.kBlinkYellow, LEDSection.Priority.WARNING);
-        }
+		}
 
-        switch (gameState){
-            case AUTO:
-				setPattern(0, LEDPattern.kSolidYellow, LEDSection.Priority.BASIC);
-                break;
-            case TRANSITION:
-				setPattern(0, LEDPattern.kBlinkWhite, LEDSection.Priority.BASIC);
-                break;
-            case RED_START:
-				setPattern(0, LEDPattern.kSolidRed, LEDSection.Priority.BASIC);
-                break;
-            case BLUE_START:
-				setPattern(0, LEDPattern.kSolidBlue, LEDSection.Priority.BASIC);
-                break;
-            case ENDGAME:
-				setPattern(0, LEDPattern.kSolidWhite, LEDSection.Priority.BASIC);
-                break;
-            default: 
-                break;
-        }
+		Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+
+		Color8Bit color = new Color8Bit();
+		if (gameState == null) color = new Color8Bit(0,0,0);
+		else {
+			switch (gameState) {
+				case AUTO:
+					setPattern(0, LEDPattern.kSolidYellow, LEDSection.Priority.BASIC);
+					color = new Color8Bit(0,0,0);
+					break;
+				case TRANSITION:
+					setPattern(0, LEDPattern.kBlinkWhite, LEDSection.Priority.BASIC);
+					color = new Color8Bit(255,0,255);
+					break;
+				case RED_START:
+					setPattern(0, LEDPattern.kSolidRed, LEDSection.Priority.BASIC);
+					color = alliance == Alliance.Red ? new Color8Bit(0,255,0) : new Color8Bit(255,0,0);
+					break;
+				case BLUE_START:
+					setPattern(0, LEDPattern.kSolidBlue, LEDSection.Priority.BASIC);
+					color = alliance == Alliance.Blue ? new Color8Bit(0,255,0) : new Color8Bit(255,0,0);
+					break;
+				case ENDGAME:
+					setPattern(0, LEDPattern.kSolidWhite, LEDSection.Priority.BASIC);
+					color = new Color8Bit(0,255,0);
+					break;
+				default: 
+					break;
+			}
+		}
+		if (stateTimeLeft < cfgDbl("stateChangeWarningTime")) {
+			color = ((int)(Timer.getFPGATimestamp()*4)%2 == 0 ? color : new Color8Bit(255, 255, 0));
+		}
+		m_stageMechanism.setBackgroundColor(color);
     }
 
     @Override
@@ -348,6 +376,8 @@ public class LED extends SubsystemBase{
 
 			m_sections[i] = null;
         }
+
+		gameStateLights();
 
         m_LED.setData(m_LEDBuffer);
         super.periodic();

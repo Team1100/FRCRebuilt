@@ -1,7 +1,7 @@
 package frc.robot.utils;
 
-import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -20,11 +20,11 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Robot;
 import frc.robot.utils.vision.VisionConfig;
 
-class MotorConfig
-{
+class MotorConfig {
   @JsonCreator
   public MotorConfig(@JsonProperty(value="cType") String controllerType,
                      @JsonProperty(value="mType") MotorType motorType,
@@ -54,7 +54,6 @@ class RobotMapConfigValue {
 }
 
 public class Configuration {
-
   JsonNode m_config;
   List<VisionConfig> m_VisionConfigs;
   Map<String, MotorConfig> m_motorConfigs;
@@ -70,53 +69,45 @@ public class Configuration {
     return theInstance;
   }
 
-  private void init()
-  {
-    try {
-      String home = java.lang.System.getenv("HOME");
-      if (home == null || home.isEmpty()) {
-        home = "/home/lvuser";
+  private void init() {
+    String myIdentity = "";
+    if (Robot.isSimulation()) {
+      Scanner scanner = new Scanner(System.in);
+      System.out.println("What identity do I have?");
+      myIdentity = scanner.nextLine();
+      scanner.close();
+    } else {
+      File f = new File(System.getenv("HOME") + "/identity");
+      try (java.io.FileReader r = new java.io.FileReader(f)) {
+        char[] cbuf = new char[32];
+        r.read(cbuf, 0, 64);
+        myIdentity = cbuf.toString();
+      } catch (IOException e) {
+        System.err.printf("Error finding identity file: %s\n%s", e.getMessage(), e.getStackTrace());
       }
-      else {
-        System.out.println("$HOME is " + home);
-      }
-      String myIdentity = "";
-      if (Robot.isSimulation()) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("What identity do I have?");
-        myIdentity = scanner.nextLine();
-        scanner.close();
-      } else {
-        File f = new File(home + "/identity");
-        if (f.exists())
-        {
-          java.io.FileReader r = new java.io.FileReader(f);
-          java.io.BufferedReader b = new BufferedReader(r);
-          myIdentity = b.readLine();
-        }
-      }
-      if (myIdentity.isEmpty()) myIdentity = "default";
-      System.out.println("Identity is " + myIdentity);
-      String jsonfilepath = home + "/deploy/1100_config.json";
-      File configfile = new File(jsonfilepath);
-      if (configfile.exists())
-      {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree(configfile);
+    }
+
+    if (myIdentity.isEmpty()) myIdentity = "default";
+    
+    File deployDir = Filesystem.getDeployDirectory();
+    File[] configFiles = deployDir.listFiles((dir, name) -> {return name.equals("1100_config.json");});
+    if (configFiles.length > 0 && configFiles[0].exists()) {
+      File configFile = configFiles[0];
+
+      ObjectMapper mapper = new ObjectMapper();
+      try {
+        JsonNode node = mapper.readTree(configFile);
         m_config = node.findValue(myIdentity);
-        if (m_config == null)
-        {
-          System.out.println("no config named " + myIdentity);
-          return;
-        }
+      } catch (IOException e) {
+        System.err.printf("Error reading config file: %s\n%s", e.getMessage(), e.getStackTrace());
       }
-      else
-      {
-        System.out.println("no json found at " + jsonfilepath);
+
+      if (m_config == null) {
+        System.out.println("No config named " + myIdentity);
+        return;
       }
-    } catch (Exception e) {
-      System.err.println("exception from RobotMap.init():" + e.toString());
-      // can't read the config. Carry on.
+    } else {
+      System.out.println("No 1100_config.json found in deploy directory " + deployDir.getAbsolutePath());
     }
   }
 

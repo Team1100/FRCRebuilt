@@ -59,7 +59,7 @@ public class Vision extends SubsystemBase {
     m_field.setRobotPose(-10, 0, Rotation2d.kZero);
     new TDSendable(this, "Field", "Vision Field", m_field);
 
-    m_poseUpdatesEnabled = new TDBoolean(this, "", "Pose Updates Enabled", true);
+    m_poseUpdatesEnabled = new TDBoolean(this, "", "Pose Updates Enabled", false);
   }
 
   public static Vision getInstance(){
@@ -93,7 +93,6 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
     if (RobotMap.V_ENABLED) {
-      if (getPoseUpdatesEnabled()) {
         Drive robotDrive = Drive.getInstance();
 
         for (var entry : m_visionSystems.entrySet()) {
@@ -107,7 +106,7 @@ public class Vision extends SubsystemBase {
               m_field.getObject(system.getName()).setPose(estPose);
 
 
-              if (system.shouldIncludeInPoseEstimates()) {
+              if (getPoseUpdatesEnabled() && system.shouldIncludeInPoseEstimates()) {
                 robotDrive.addVisionMeasurement(estPose, est.timestamp, est.stdDevs);
 
                 m_estX.set(estPose.getX());
@@ -117,7 +116,6 @@ public class Vision extends SubsystemBase {
             }
           );
         }
-      }
       for (Pose3dPublisher publisher : m_posePublishers.values()) {
         publisher.post();
       }

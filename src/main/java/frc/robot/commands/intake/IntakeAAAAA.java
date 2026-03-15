@@ -4,15 +4,15 @@ import frc.robot.subsystems.Intake;
 import frc.robot.testingdashboard.Command;
 import frc.robot.utils.Configuration;
 
-public class IntakeOut extends Command {
+public class IntakeAAAAA extends Command {
     private final Intake m_intake;
     private final double m_intakeSpeed;
 
-    public IntakeOut() {
-        super(Intake.getInstance(), "Intake", "IntakeOut");
+    public IntakeAAAAA() {
+        super(Intake.getInstance(), "Intake", "IntakeAAAAA");
 
         m_intake = Intake.getInstance();
-        m_intakeSpeed = Configuration.getInstance().getDouble("Intake", "rollerSpeed");
+        m_intakeSpeed = 1.0;
 
         addRequirements(m_intake);
     }

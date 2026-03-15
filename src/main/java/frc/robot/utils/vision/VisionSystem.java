@@ -126,7 +126,7 @@ public class VisionSystem {
                     Matrix<N3,N1> stdDevs = getEstimationStdDevs(est.estimatedPose.toPose2d());
                     result = Optional.of(new VisionEstimationResult(est.estimatedPose, latestTimestamp, ambiguity, stdDevs, latestResult));
                 } else {
-                    //System.out.println("invalid: " + m_camera.getName());
+                    System.out.println("invalid: " + m_camera.getName());
                 }
             }
         }
@@ -209,7 +209,7 @@ public class VisionSystem {
         //Reject if robot is tilted too much
         if(Math.abs(estPose.estimatedPose.getRotation().getX()) > VisionConstants.kMaxRollError ||
            Math.abs(estPose.estimatedPose.getRotation().getY()) > VisionConstants.kMaxPitchError) {
-            //System.out.println("pose too tilted roll " + estPose.estimatedPose.getRotation().getX() + " pitch " + estPose.estimatedPose.getRotation().getY());
+            System.out.println("pose too tilted roll " + estPose.estimatedPose.getRotation().getX() + " pitch " + estPose.estimatedPose.getRotation().getY());
             return false;
         }
 

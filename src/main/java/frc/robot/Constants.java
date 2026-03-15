@@ -169,7 +169,7 @@ public final class Constants {
         
         public static final double kBasicShooterRPM = 2000;
 
-        public static final double kChimneySpeed = 0.7;
+        public static final double kChimneySpeed = 1.0;
     }
 
     public static final class OIConstants {

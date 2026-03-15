@@ -340,11 +340,11 @@
 	"Intake" : [
 		{"varName" : "rollerEnabled", "value" : true},
 
-		{"varName" : "rollerSpeed", "value" : 0.3}, 
+		{"varName" : "rollerSpeed", "value" : 0.5}, 
 		{"varName" : "rollerStallLimit", "value" : 10},
 		{"varName" : "rollerFreeLimit", "value" : 40},
 
-		{"varName" : "deployerEnabled", "value" : false},
+		{"varName" : "deployerEnabled", "value" : true},
 
 		{"varName" : "deployer2Invert", "value" : true},
         {"varName" : "deployerCurrentLimit", "value" : 20},
@@ -425,7 +425,7 @@
 
 	"LED" : [
 		{"varName" : "LEDPort", "value": 1},
-		{"varName" : "stateChangeWarningTime", "value" : 1.5 }
+		{"varName" : "stateChangeWarningTime", "value" : 5 }
 	],
 
 	"Climber" : [
@@ -480,7 +480,7 @@
                 "z": 0.2055876
             },
             "angles": {
-                "pitch": 25,
+                "pitch": -25,
                 "yaw": -45,
                 "roll": 0
             },

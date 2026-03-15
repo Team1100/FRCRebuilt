@@ -140,9 +140,6 @@ public class FieldUtils{
             return null;
         }
     }
-    public void startGameTimer(){
-        timer.start();
-    }
 
     public Pose2d redPoseToAlliancePose(Pose2d pose) {
         AprilTagFieldLayout layout = Constants.VisionConstants.kTagLayout;
@@ -182,21 +179,32 @@ public class FieldUtils{
 
         if (time > 0 && time < 20){
             return GameState.AUTO;
-        } else if (time >= 20 && time < 30){
+        } else if (time < 30) {
             return GameState.TRANSITION;
-        } else if ((time >= 30 && time < 55) || (time >= 80 && time < 105)){
+        } else if ((time < 55) || (time >= 80 && time < 105)) {
             return firstTeamHub;
-        } else if ((time >= 55 && time < 80) || (time >= 105 && time < 130)){
+        } else if ((time < 80) || (time >= 105 && time < 130)) {
             return secondTeamHub;
-        } else if (time >= 130 && time < 160){
+        } else if (time < 160) {
             return GameState.ENDGAME;
         } else {
             return null;
         }
-
     }
-    public double stateTimeLeft(){
-        double matchTime = timer.get();
+
+    public double stateTimeLeft() {
+        double matchTime;
+        if (DriverStation.isFMSAttached()) {
+            matchTime = Timer.getMatchTime();
+            if (DriverStation.isAutonomous()) {
+                matchTime += 140;
+            } else {
+                matchTime += 20;
+            }
+        } else {
+            matchTime = Timer.getFPGATimestamp();
+        }
+
         if (matchTime<20) return 20-matchTime;
         if (matchTime<30) return 30-matchTime;
         if (matchTime<55) return 55-matchTime;

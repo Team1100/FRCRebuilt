@@ -7,7 +7,7 @@ public class FuelRainbowRightTrench extends Command {
     private final Shooter m_Shooter;
 
     public FuelRainbowRightTrench() {
-        super(Shooter.getInstance(), "Shooting", "Fuel Rainbow Right Trench");
+        super(Shooter.getInstance(), "Shooting", "FuelRainbowRightTrench");
 
         m_Shooter = Shooter.getInstance();
 
