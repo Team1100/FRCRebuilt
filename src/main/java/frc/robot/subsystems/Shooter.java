@@ -727,7 +727,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public Pose3d getTurretPose() {
-        return m_turretPose;
+        return m_turretPoseEstimator.getEstimatedPosition();
     }
 
     private void runTurret() {
@@ -911,9 +911,14 @@ public class Shooter extends SubsystemBase {
                 m_flywheelFF.setKs(m_TDflywheelKs.get());
             }
 
-            double arbFF = m_flywheelFF.calculate(m_TDflywheelVelocity.get());
-            m_flywheelLeftMotor.getClosedLoopController().setSetpoint(m_TDflywheelVelocity.get(), ControlType.kVelocity,
-                    ClosedLoopSlot.kSlot0, arbFF);
+            double flywheelSetpoint = m_TDflywheelVelocity.get();
+            if(flywheelSetpoint == 0) {
+                m_flywheelLeftMotor.set(0);
+            } else {
+                double arbFF = m_flywheelFF.calculate(flywheelSetpoint);
+                m_flywheelLeftMotor.getClosedLoopController().setSetpoint(flywheelSetpoint, ControlType.kVelocity,
+                        ClosedLoopSlot.kSlot0, arbFF);
+            }
 
             m_TDflywheelMeasuredVelocity.set(m_flywheelLeftMotor.getEncoder().getVelocity());
             m_TDflywheelMeasuredCurrent.set(m_flywheelLeftMotor.getOutputCurrent());
