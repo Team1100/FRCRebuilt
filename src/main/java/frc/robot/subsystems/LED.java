@@ -155,6 +155,8 @@ public class LED extends SubsystemBase{
 		
 		public static final LEDPattern kBlinkWhite =
 			new LEDPattern(PatternType.BLINK, Color.kWhite, Color.kBlack, m_blinkSpeed);
+			public static final LEDPattern kBlinkMaroon =
+			new LEDPattern(PatternType.BLINK, Color.kMaroon, Color.kBlack, m_blinkSpeed);
 		public static final LEDPattern kBlinkRed =
 			new LEDPattern(PatternType.BLINK, Color.kRed, Color.kBlack, m_blinkSpeed);
 		public static final LEDPattern kBlinkOrange =
@@ -175,6 +177,8 @@ public class LED extends SubsystemBase{
 		// Checkered
 		public static final LEDPattern kCheckeredWhite =
 			new LEDPattern(PatternType.CHECKERED, Color.kWhite, Color.kBlack, m_checkeredSpeed);
+		public static final LEDPattern kCheckeredMaroon =
+			new LEDPattern(PatternType.CHECKERED, Color.kMaroon, Color.kBlack, m_checkeredSpeed);
 		public static final LEDPattern kCheckeredRed =
 			new LEDPattern(PatternType.CHECKERED, Color.kRed, Color.kBlack, m_checkeredSpeed);
 		public static final LEDPattern kCheckeredOrange =
@@ -191,6 +195,8 @@ public class LED extends SubsystemBase{
 		// Checkered
 		public static final LEDPattern kCheckeredBlinkWhite =
 			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kWhite, Color.kBlack, m_checkeredBlinkSpeed);
+		public static final LEDPattern kCheckeredBlinkMaroon =
+			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kMaroon, Color.kBlack, m_checkeredBlinkSpeed);
 		public static final LEDPattern kCheckeredBlinkRed =
 			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kRed, Color.kBlack, m_checkeredBlinkSpeed);
 		public static final LEDPattern kCheckeredBlinkOrange =
@@ -209,6 +215,8 @@ public class LED extends SubsystemBase{
 			new LEDPattern(PatternType.SLIDE, Color.kWhite, Color.kBlack, m_slideSpeed);
 		public static final LEDPattern kSlideRed =
 			new LEDPattern(PatternType.SLIDE, Color.kRed, Color.kBlack, m_slideSpeed);
+		public static final LEDPattern kSlideMaroon =
+			new LEDPattern(PatternType.SLIDE, Color.kMaroon, Color.kBlack, m_slideSpeed);
 		public static final LEDPattern kSlideOrange =
 			new LEDPattern(PatternType.SLIDE, Color.kOrange, Color.kBlack, m_slideSpeed);
 		public static final LEDPattern kSlideYellow =
