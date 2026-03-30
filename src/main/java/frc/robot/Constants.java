@@ -181,8 +181,17 @@ public final class Constants {
         public static final double kVelocityQuadTermC =  9.78677085670659030e-1;
 
         // values for 45 degrees (farther from hub)
+        public static final double[][] kVelocityLinTerms = {
+            //                   angle,   slope, y-intercept
+            {Math.toRadians(45), 1.85e-3,     2.18000},
+            {Math.toRadians(50), 1.80e-3,     1.94375},
+            {Math.toRadians(65), 1.65e-3,     1.23500},
+        };
         public static final double kVelocityLinTermM_45 = 0.00185;
         public static final double kVelocityLinTermB_45 = 2.18;
+        // values for 45 degrees (farther from hub)
+        public static final double kVelocityLinTermM_50 = 0.0017;
+        public static final double kVelocityLinTermB_50 = 1.94375;
         // values for 65 degrees (closer to hub)
         public static final double kVelocityLinTermM_65 = 0.00165;
         public static final double kVelocityLinTermB_65 = 1.235;

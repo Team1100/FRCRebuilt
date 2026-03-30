@@ -274,10 +274,10 @@ public class Shooter extends SubsystemBase {
 
         m_flywheelVelocityTermsM = new InterpolatingDoubleTreeMap();
         m_flywheelVelocityTermsB = new InterpolatingDoubleTreeMap();
-        m_flywheelVelocityTermsM.put(Math.toRadians(45), ShooterConstants.kVelocityLinTermM_45);
-        m_flywheelVelocityTermsB.put(Math.toRadians(45), ShooterConstants.kVelocityLinTermB_45);
-        m_flywheelVelocityTermsM.put(Math.toRadians(65), ShooterConstants.kVelocityLinTermM_65);
-        m_flywheelVelocityTermsB.put(Math.toRadians(65), ShooterConstants.kVelocityLinTermB_65);
+        for (double[] mapping : ShooterConstants.kVelocityLinTerms) {
+            m_flywheelVelocityTermsM.put(mapping[0], mapping[1]);
+            m_flywheelVelocityTermsB.put(mapping[0], mapping[2]);
+        }
 
         m_TDflywheelMeasuredVelocity = new TDNumber(this, "Flywheel", "Measured Velocity");
         m_TDflywheelMeasuredCurrent = new TDNumber(this, "Flywheel", "Measured Current");
@@ -560,8 +560,8 @@ public class Shooter extends SubsystemBase {
         int res = 32;
         for (int i = 0; i < res; i++) {
             double t = i/(double)(res-1);
-            Translation3d inter = conditions.start.getTranslation()
-                .interpolate(conditions.target.getTranslation(), t);
+            Translation3d inter = conditions.launch
+                .interpolate(conditions.target, t);
             Pose2d pose = new Pose2d(inter.toTranslation2d(), Rotation2d.kZero);
             m_trajectoryDisplay.getObject("point" + i).setPose(pose);
         }
