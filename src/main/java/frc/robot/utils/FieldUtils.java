@@ -160,9 +160,12 @@ public class FieldUtils{
         BLUE_START,
         ENDGAME
     }
-
+    public void startTimer(){
+        timer.start();
+    }
     public GameState getGameState(){
         double time = timer.get();
+        //System.out.println(time);
         AutoWinner winner = getAutoWinner();
         GameState firstTeamHub;
         GameState secondTeamHub;
@@ -198,13 +201,11 @@ public class FieldUtils{
             matchTime = Timer.getMatchTime();
             if (DriverStation.isAutonomous()) {
                 matchTime += 140;
-            } else {
-                matchTime += 20;
             }
         } else {
-            matchTime = Timer.getFPGATimestamp();
+            matchTime = 160-timer.get();
         }
-
+        matchTime = 160-matchTime;
         if (matchTime<20) return 20-matchTime;
         if (matchTime<30) return 30-matchTime;
         if (matchTime<55) return 55-matchTime;

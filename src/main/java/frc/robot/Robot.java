@@ -52,7 +52,9 @@ public class Robot extends TimedRobot {
 		1
 	);
 	LED.getInstance().setFallbackPattern(autoPattern);
+  FieldUtils.getInstance().startTimer();
   }
+  
 
   @Override
   public void autonomousPeriodic() {}

@@ -446,7 +446,15 @@
 
 	"LED" : [
 		{"varName" : "LEDPort", "value": 1},
-		{"varName" : "stateChangeWarningTime", "value" : 5 }
+		{"varName" : "stateChangeWarningTime", "value" : 5},
+        {"varName" : "LEDCount", "value" : 40},
+        {"varName" : "blinkSpeed", "value" : 3},
+        {"varName" : "checkeredSpeed", "value" : 3},
+        {"varName" : "checkeredBlinkSpeed", "value" : 3},
+        {"varName" : "slideSpeed", "value" : 3},
+        {"varName" : "gradientSpeed", "value" : 1},
+        {"varName" : "rainbowSpeed", "value" : 3}
+
 	],
 
 	"Climber" : [
