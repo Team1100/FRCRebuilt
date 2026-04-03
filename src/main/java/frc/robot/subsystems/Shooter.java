@@ -42,12 +42,14 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.testingdashboard.SubsystemBase;
+import frc.robot.testingdashboard.TDBoolean;
 import frc.robot.testingdashboard.TDNumber;
 import frc.robot.testingdashboard.TDSendable;
 import frc.robot.utils.FieldUtils;
 import frc.robot.utils.SwerveTurretPoseEstimator3d;
 import frc.robot.utils.sensing.SparkCurrentLimitDetector;
 import frc.robot.utils.sensing.SparkCurrentLimitDetector.HardLimitDirection;
+import frc.robot.utils.trajectory.VelocityMapping;
 import frc.robot.utils.trajectory.TrajectorySolver.TrajectoryConditions;
 import frc.robot.utils.trajectory.TrajectorySolver.TrajectoryParameters;
 import frc.robot.utils.vision.VisionEstimationResult;
@@ -77,10 +79,8 @@ public class Shooter extends SubsystemBase {
 
     private SimpleMotorFeedforward m_flywheelFF;
 
-    // private TDNumber m_TDflywheelLinTermM;
-    // private TDNumber m_TDflywheelLinTermB;
-    private InterpolatingDoubleTreeMap m_flywheelVelocityTermsM;
-    private InterpolatingDoubleTreeMap m_flywheelVelocityTermsB;
+    private VelocityMapping m_overrideVelocityMapping;
+    private TDBoolean m_enableOverrideVelocityMapping;
 
     private TDNumber m_TDflywheelVelocity;
     private TDNumber m_TDflywheelMeasuredVelocity;
@@ -262,10 +262,12 @@ public class Shooter extends SubsystemBase {
         m_flywheelFF = new SimpleMotorFeedforward(
                 m_TDflywheelKs.get(), m_TDflywheelKv.get(), m_TDflywheelKa.get());
 
-        m_turretTolerance = cfgDbl("turretTolerance");
-
         m_TDflywheelVelocity = new TDNumber(this, "Flywheel", "Target Velocity");
         m_TDflywheelVelocity.set(0);
+
+        m_overrideVelocityMapping = new VelocityMapping();
+        new TDSendable(this, "Flywheel", "Override VMap", m_overrideVelocityMapping);
+        m_enableOverrideVelocityMapping = new TDBoolean(this, "Flywheel", "Enable Override VMap", false);
 
         m_TDflywheelMeasuredVelocity = new TDNumber(this, "Flywheel", "Measured Velocity");
         m_TDflywheelMeasuredCurrent = new TDNumber(this, "Flywheel", "Measured Current");
@@ -324,6 +326,8 @@ public class Shooter extends SubsystemBase {
 
         m_TDturretTargetAngle = new TDNumber(this, "Turret", "Target Angle");
         m_TDturretSpeed = new TDNumber(this, "Turret", "Turret Speed");
+
+        m_turretTolerance = cfgDbl("turretTolerance");
 
         m_TDturretMeasuredPosition = new TDNumber(this, "Turret", "Measured Position");
         m_TDturretMeasuredVelocity = new TDNumber(this, "Turret", "Measured Velocity");
@@ -600,7 +604,9 @@ public class Shooter extends SubsystemBase {
             final double rpm = (-b + Math.sqrt(b*b - 4*a*(c-velocity)))/(2*a);
             return Math.max(rpm, 0);
         } else {
-            return ShooterConstants.kVelocityMap.get(angle).getRPM(velocity);
+            if (m_enableOverrideVelocityMapping.get()) return m_overrideVelocityMapping.getRPM(velocity);
+            VelocityMapping map = ShooterConstants.kVelocityMap.get(angle);
+            return map == null ? 0.0 : map.getRPM(velocity);
         }
     }
 
@@ -612,7 +618,9 @@ public class Shooter extends SubsystemBase {
 
             return a*rpm*rpm + b*rpm + c;
         } else {
-            return ShooterConstants.kVelocityMap.get(angle).getVelocity(rpm);
+            if (m_enableOverrideVelocityMapping.get()) return m_overrideVelocityMapping.getVelocity(rpm);
+            VelocityMapping map = ShooterConstants.kVelocityMap.get(angle);
+            return map == null ? 0.0 : map.getVelocity(rpm);
         }
     }
 

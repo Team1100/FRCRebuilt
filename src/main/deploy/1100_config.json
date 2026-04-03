@@ -508,6 +508,22 @@
             "primaryStrat": "MULTI_TAG_PNP_ON_COPROCESSOR",
             "backupStrat": "LOWEST_AMBIGUITY",
             "includeInPoseEstimates": true
+        },
+        {
+            "name": "BackRightCamera",
+            "translation": {
+                "x": -0.2814828,
+                "y": -0.2814828,
+                "z": 0.2055876
+            },
+            "angles": {
+                "pitch": -25,
+                "yaw": -135,
+                "roll": 0
+            },
+            "primaryStrat": "MULTI_TAG_PNP_ON_COPROCESSOR",
+            "backupStrat": "LOWEST_AMBIGUITY",
+            "includeInPoseEstimates": true
         }
 	]
 }

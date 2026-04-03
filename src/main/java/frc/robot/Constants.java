@@ -187,9 +187,9 @@ public final class Constants {
         public static final double kVelocityQuadTermC =  9.78677085670659030e-1;
 
         public static final InterpolatingVelocityMap kVelocityMap = new InterpolatingVelocityMap(Map.ofEntries(
-            Map.entry(Math.toRadians(45), new VelocityMapping(3.15, 9.58, 500, 4000)),
-            Map.entry(Math.toRadians(50), new VelocityMapping(2.80, 8.74, 500, 4000)),
-            Map.entry(Math.toRadians(65), new VelocityMapping(2.06, 7.84, 500, 4000))
+            Map.entry(Math.toRadians(45), new VelocityMapping(3.15, 9.58, 0750, 4250)),
+            Map.entry(Math.toRadians(60), new VelocityMapping(7.40, 8.25, 3250, 3650)),
+            Map.entry(Math.toRadians(65), new VelocityMapping(2.06, 7.84, 0500, 3750))
         ));
 
         /*

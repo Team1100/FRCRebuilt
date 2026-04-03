@@ -28,6 +28,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    FieldUtils.getInstance().getAlliance();
+    
 	  LED.getInstance().setFallbackPattern(LEDPattern.kRainbow);
   }
 
@@ -39,6 +41,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    FieldUtils.getInstance().getAlliance();
+    
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -62,17 +66,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    FieldUtils.getInstance().getAlliance();
+    
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
 
-	LEDPattern teleopPattern = new LEDPattern(
-		LEDPattern.PatternType.SOLID,
-		new Color(75, 180, 255),
-		Color.kBlack,
-		1
-	);
-	LED.getInstance().setFallbackPattern(teleopPattern);
+    LEDPattern teleopPattern = new LEDPattern(
+      LEDPattern.PatternType.SOLID,
+      new Color(75, 180, 255),
+      Color.kBlack,
+      1
+    );
+    LED.getInstance().setFallbackPattern(teleopPattern);
   }
 
   @Override

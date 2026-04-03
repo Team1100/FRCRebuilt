@@ -13,20 +13,15 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import frc.robot.Constants;
-import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.LED.LEDPattern;
 import frc.robot.subsystems.LED.LEDSection.Priority;
 import frc.robot.testingdashboard.Command;
-import frc.robot.testingdashboard.TDSendable;
 import frc.robot.utils.Configuration;
+import frc.robot.utils.FieldUtils;
 import frc.robot.utils.structlogging.StructLogger;
 import frc.robot.utils.trajectory.TrajectorySolver;
 import frc.robot.utils.trajectory.TrajectorySolver.TrajectoryConditions;
@@ -34,17 +29,11 @@ import frc.robot.utils.trajectory.TrajectorySolver.TrajectoryParameters;
 
 public class ShootToPose extends Command {
     private final Shooter m_Shooter;
-    private final Vision m_Vision;
     private final Drive m_Drive;
 
-    private Transform3d m_cameraToTurret;
     private Transform3d m_chassisToTurret;
 
     private final Supplier<Pose3d> m_targetSupplier;
-
-    private Field2d m_trajectoryDisplay;
-
-    private String m_cameraName;
 
     private StructLogger m_ballPositionLogger;
     private List<Translation3d> m_ballPositions;
@@ -53,38 +42,35 @@ public class ShootToPose extends Command {
     private StructLogger m_correctedTargetLogger;
     private StructLogger m_chassisVelocityLogger;
 
-    private final InterpolatingDoubleTreeMap m_angleMap;
+    private final InterpolatingDoubleTreeMap m_distAngleMap;
 
     private static final Map<Double, Double> DEFAULT_ANGLEMAP = Map.of(
         0.0, Math.toRadians(65),
         2.7, Math.toRadians(65),
-        2.71, Math.toRadians(50),
-        16.0, Math.toRadians(50)
+        2.71, Math.toRadians(60),
+        16.0, Math.toRadians(60)
     );
 
     private static final int ITERATIONS = 20;
     private static final double ERROR_THRESHOLD = 1e-2;
 
-    private static final int DISPLAY_RES = 100;
+    private static final int DISPLAY_RES = 16;
 
     public ShootToPose(Supplier<Pose3d> targetSupplier) {
         this(targetSupplier, DEFAULT_ANGLEMAP);
     }
 
-    public ShootToPose(Supplier<Pose3d> targetSupplier, Map<Double, Double> angleMap) {
+    public ShootToPose(Supplier<Pose3d> targetSupplier, Map<Double, Double> distAngleMap) {
         super(Shooter.getInstance(), "Targeted Shooting", "ShootToPose");
 
         m_Shooter = Shooter.getInstance();
-        m_Vision = Vision.getInstance();
         m_Drive = Drive.getInstance();
         m_targetSupplier = targetSupplier;
 
-        m_angleMap = new InterpolatingDoubleTreeMap();
-        for (Double key : angleMap.keySet()) {
-            m_angleMap.put(key, angleMap.get(key));
+        m_distAngleMap = new InterpolatingDoubleTreeMap();
+        for (Double key : distAngleMap.keySet()) {
+            m_distAngleMap.put(key, distAngleMap.get(key));
         }
-
-        m_cameraName = "TurretCamera";
 
         if (RobotBase.isSimulation()) {
             m_ballPositionLogger = StructLogger.translation3dArrayLogger(m_Shooter, "FuelPoses", null);
@@ -139,7 +125,7 @@ public class ShootToPose extends Command {
             }
 
             double dist = turretPose.getTranslation().toTranslation2d().getDistance(compensatingTarget.toTranslation2d());
-            double angle = m_angleMap.get(dist);
+            double angle = m_distAngleMap.get(dist);
             
             conditions.launch = turretPose.getTranslation();
             conditions.target = compensatingTarget;
@@ -177,7 +163,7 @@ public class ShootToPose extends Command {
 
         // System.out.println(m_Shooter.turretAtTarget() + " " + m_Shooter.flywheelAtTarget() + " " + m_Shooter.hoodAtTarget());
         // if (m_Shooter.turretAtTarget() && m_Shooter.flywheelAtTarget()) {
-            // LED.getInstance().setPattern(1, LEDPattern.kCheckeredBlinkGreen, Priority.INFO);
+            LED.getInstance().setPattern(1, LEDPattern.kCheckeredBlinkGreen, Priority.INFO);
             m_Shooter.chimneySpeed(1);
         // } else {
             // LED.getInstance().setPattern(1, LEDPattern.kCheckeredBlinkYellow, Priority.INFO);
@@ -233,5 +219,13 @@ public class ShootToPose extends Command {
         m_Shooter.setFlywheelTarget(0);
         m_Shooter.setHoodTarget(0);
         m_Shooter.chimneyStop();
+    }
+
+    public static ShootToPose withFixedAngle(Supplier<Pose3d> targetSupplier, double angle) {
+        return new ShootToPose(targetSupplier, Map.of(0.0,angle));
+    }
+
+    public static ShootToPose hubTargetting() {
+        return new ShootToPose(FieldUtils.getInstance()::getHubPose, DEFAULT_ANGLEMAP);
     }
 }

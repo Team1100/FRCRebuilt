@@ -17,8 +17,11 @@ public class InterpolatingVelocityMap {
     }
 
     public VelocityMapping get(double angle) {
-        double ceil = m_map.ceilingKey(angle);
-        double floor = m_map.floorKey(angle);
+        if (m_map.size() == 0) return null;
+        Double ceil = m_map.ceilingKey(angle);
+        Double floor = m_map.floorKey(angle);
+        if (floor == null) floor = ceil;
+        if (ceil == null) ceil = floor;
 
         double t = MathUtil.inverseInterpolate(floor, ceil, angle);
 

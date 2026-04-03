@@ -27,6 +27,8 @@ public class FieldUtils{
     private static FieldUtils m_fieldUtils;
     private Timer timer;
 
+    private Alliance m_alliance;
+
     // I wrote the directions based on their position on a face
     public static final AllianceAprilTags RedTags =
         new AllianceAprilTags(
@@ -65,7 +67,7 @@ public class FieldUtils{
             19,
             20);
 
-    public static FieldUtils getInstance(){
+    public static FieldUtils getInstance() {
         if(m_fieldUtils == null){
             m_fieldUtils = new FieldUtils();
         }
@@ -74,34 +76,26 @@ public class FieldUtils{
 
     private FieldUtils(){
         timer = new Timer();
+        m_alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+    }
+
+    public Alliance getAlliance() {
+        m_alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+        return m_alliance;
     }
 
     public AllianceAprilTags getAllianceAprilTags(){
-        AllianceAprilTags tags = BlueTags;
-        Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
-        if(alliance.isPresent()){
-            if(alliance.get() == DriverStation.Alliance.Red){
-                tags = RedTags;
-            } else if(alliance.get() == DriverStation.Alliance.Blue) {
-                tags = BlueTags;
-            }
-        }
-        return tags;
+        if (m_alliance == Alliance.Red) return RedTags;
+        else return BlueTags;
     }
 
-    public Pose3d getTagPose(int tagId)
-    {
+    public Pose3d getTagPose(int tagId) {
         return VisionConstants.kTagLayout.getTagPose(tagId).get();
     }
     
     public Rotation2d getRotationOffset() {
-        Rotation2d offset = new Rotation2d();//returns no offset by default
-        Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
-        if(alliance.isPresent() && 
-            alliance.get() == DriverStation.Alliance.Red){
-                offset = new Rotation2d(Math.PI);
-        }
-        return offset;
+        if (m_alliance == Alliance.Red) return Rotation2d.k180deg;
+        else return Rotation2d.kZero;
     }
 
     public Rotation2d getAngleToPose(Pose2d currentPose, Pose2d targetPose) {
@@ -112,13 +106,13 @@ public class FieldUtils{
     }
 
     public boolean inAllianceHalf(Pose2d robotPose, Alliance alliance) {
-        return (alliance == Alliance.Blue) ^ (robotPose.getX() > FieldLocationConstants.kMidfieldX);
+        if (alliance == Alliance.Blue) return robotPose.getX() < FieldLocationConstants.kMidfieldX;
+        else return robotPose.getX() > FieldLocationConstants.kMidfieldX;
     }
 
     public boolean inAllianceZone(Pose2d robotPose, Alliance alliance) {
-        boolean red = (alliance == Alliance.Red) && (robotPose.getX() < FieldLocationConstants.kRedAllianceZoneX);
-        boolean blue = (alliance == Alliance.Blue) && (robotPose.getX() > FieldLocationConstants.kBlueAllianceZoneX);
-        return red || blue;
+        if (alliance == Alliance.Blue) return robotPose.getX() < FieldLocationConstants.kBlueAllianceZoneX;
+        else return robotPose.getX() > FieldLocationConstants.kBlueAllianceZoneX;
     }
 
     public Pose3d getHubPose() {
@@ -132,9 +126,9 @@ public class FieldUtils{
         BLUE
     }
 
-    public AutoWinner getAutoWinner(){ 
+    public AutoWinner getAutoWinner() {
         String gameData = DriverStation.getGameSpecificMessage();
-        if (gameData.length() > 0){
+        if (gameData.length() > 0) {
             return (gameData.charAt(0) == 'R') ? AutoWinner.RED : AutoWinner.BLUE;
         } else {
             return null;
@@ -143,13 +137,13 @@ public class FieldUtils{
 
     public Pose2d redPoseToAlliancePose(Pose2d pose) {
         AprilTagFieldLayout layout = Constants.VisionConstants.kTagLayout;
-        return (DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red) ? pose :
+        return (m_alliance == Alliance.Red) ? pose :
                 pose.rotateAround(new Translation2d(layout.getFieldLength()/2.0, layout.getFieldWidth()/2.0), Rotation2d.k180deg);
     }
 
     public Pose2d bluePoseToAlliancePose(Pose2d pose) {
         AprilTagFieldLayout layout = Constants.VisionConstants.kTagLayout;
-        return (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue) ? pose :
+        return (m_alliance == Alliance.Blue) ? pose :
                 pose.rotateAround(new Translation2d(layout.getFieldLength()/2.0, layout.getFieldWidth()/2.0), Rotation2d.k180deg);
     }
 
@@ -161,7 +155,7 @@ public class FieldUtils{
         ENDGAME
     }
 
-    public GameState getGameState(){
+    public GameState getGameState() {
         double time = timer.get();
         AutoWinner winner = getAutoWinner();
         GameState firstTeamHub;

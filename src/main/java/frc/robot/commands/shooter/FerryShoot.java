@@ -1,10 +1,13 @@
 package frc.robot.commands.shooter;
 
+import java.util.Map;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -42,7 +45,7 @@ public class FerryShoot extends Command {
             new TDSendable(m_Shooter, "Targeted Shooting", "FerryTargetDisplay", m_field);
         }
 
-        m_internalShootToPose = new ShootToPose(this::getTargetPosition);
+        m_internalShootToPose = ShootToPose.withFixedAngle(this::getTargetPosition, Math.toRadians(40));
     }
 
     public Pose3d getTargetPosition() {
@@ -58,10 +61,12 @@ public class FerryShoot extends Command {
         if ((alliance == Alliance.Blue && chassisPose.getY() < midFieldY) || 
             (alliance == Alliance.Red && chassisPose.getY() > midFieldY)) {
             Pose3d trenchPose = FieldUtils.getInstance().getTagPose(FieldUtils.getInstance().getAllianceAprilTags().frontRightTrench);
-            target = trenchPose.getTranslation().toTranslation2d();
+            Pose3d hitPose = trenchPose.plus(new Transform3d(new Pose3d(), new Pose3d(new Translation3d(3.3, -1, 0), Rotation3d.kZero)));
+            target = hitPose.getTranslation().toTranslation2d();
         } else {
             Pose3d trenchPose = FieldUtils.getInstance().getTagPose(FieldUtils.getInstance().getAllianceAprilTags().frontLeftTrench);
-            target = trenchPose.getTranslation().toTranslation2d();
+            Pose3d hitPose = trenchPose.plus(new Transform3d(new Pose3d(), new Pose3d(new Translation3d(3.3, 1, 0), Rotation3d.kZero)));
+            target = hitPose.getTranslation().toTranslation2d();
         }
         m_targetPosition = target;
         m_internalShootToPose.initialize();
