@@ -11,7 +11,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 2.5
+                  "waitTime": 1.5
                 }
               },
               {
@@ -27,7 +27,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.75
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -78,6 +78,12 @@
           "data": {
             "commands": [
               {
+                "type": "path",
+                "data": {
+                  "pathName": "BoltDepot In Slow"
+                }
+              },
+              {
                 "type": "named",
                 "data": {
                   "name": "SpindexerSpin"
@@ -93,12 +99,6 @@
                 "type": "named",
                 "data": {
                   "name": "IntakeIn"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "BoltDepot In Slow"
                 }
               }
             ]

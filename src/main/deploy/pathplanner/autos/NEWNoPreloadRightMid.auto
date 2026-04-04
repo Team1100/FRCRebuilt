@@ -9,46 +9,9 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
+                "type": "path",
                 "data": {
-                  "waitTime": 1.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShootToHub"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "SpindexerSpin"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "YoureUnderArrest"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "DeployerOut"
+                  "pathName": "RB to RightNML"
                 }
               }
             ]
@@ -61,58 +24,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "LB to LeftNML"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "LeftNML to LFuel"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeIn"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "LFuel to Mid"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeIn"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "LMidFuel to LShoot"
+                  "pathName": "RightMid"
                 }
               },
               {
@@ -143,6 +55,12 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "SpindexerSpin"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "YoureUnderArrest"
                 }
               },
@@ -151,12 +69,6 @@
                 "data": {
                   "name": "IntakeIn"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "SpindexerSpin"
-                }
               }
             ]
           }
@@ -168,7 +80,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "LeftShoot to closerLFuel"
+                  "pathName": "RightShoot to closerRFuel"
                 }
               },
               {
@@ -187,7 +99,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "noTurnTrenchLeft"
+                  "pathName": "noTurnTrenchRight"
                 }
               },
               {
@@ -206,7 +118,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "closerLFuel to closerMidFuel"
+                  "pathName": "closerRFuel to closerMidMidR"
                 }
               },
               {
@@ -225,7 +137,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "closerMidMid to LeftShoot"
+                  "pathName": "closerMidMidR to RightShoot"
                 }
               },
               {
@@ -238,7 +150,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {

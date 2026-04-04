@@ -100,36 +100,36 @@
                 "data": {
                   "name": "SpindexerSpin"
                 }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIn"
+                }
               },
               {
-                "type": "parallel",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakeIn"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ShootToHub"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "SpindexerSpin"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "YoureUnderArrest"
-                      }
-                    }
-                  ]
+                  "name": "ShootToHub"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "YoureUnderArrest"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SpindexerSpin"
                 }
               }
             ]

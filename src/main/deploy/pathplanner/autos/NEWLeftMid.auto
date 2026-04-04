@@ -74,45 +74,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "LeftNML to LFuel"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeIn"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "LFuel to Mid"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeIn"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "LMidFuel to LShoot"
+                  "pathName": "LeftMid"
                 }
               },
               {
@@ -143,6 +105,12 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "SpindexerSpin"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "YoureUnderArrest"
                 }
               },
@@ -150,12 +118,6 @@
                 "type": "named",
                 "data": {
                   "name": "IntakeIn"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "SpindexerSpin"
                 }
               }
             ]
@@ -238,7 +200,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
