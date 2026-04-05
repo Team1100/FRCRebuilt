@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -127,6 +128,10 @@ public class ShootToPose extends Command {
             Translation3d compensatingTarget = target.getTranslation();
             if (params != null) {
                 compensatingTarget = compensatingTarget.minus(new Translation3d(chassisVelocity.times(params.time)));
+                // Translation3d turretCOMoffset = m_chassisToTurret.getTranslation();
+                // compensatingTarget = compensatingTarget.minus(turretCOMoffset
+                //     .rotateBy(new Rotation3d(0, 0, chassisSpeeds.omegaRadiansPerSecond*params.time)))
+                //     .plus(turretCOMoffset);
             }
 
             double dist = turretPose.getTranslation().toTranslation2d().getDistance(compensatingTarget.toTranslation2d());

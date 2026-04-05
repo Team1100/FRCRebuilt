@@ -150,7 +150,7 @@ public class ShootMap extends Command {
             double actual = pose.getRotation().getRadians();
             
             double error = intended - actual;
-            error = MathUtil.clamp(error, Math.toRadians(-30), Math.toRadians(30));
+            error = 0;//MathUtil.clamp(error, Math.toRadians(-30), Math.toRadians(30));
             turretAngle = setpoint.turret + error;
         } else {
             Rotation2d angle;
