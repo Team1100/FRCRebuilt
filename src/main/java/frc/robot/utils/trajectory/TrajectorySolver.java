@@ -47,8 +47,12 @@ public class TrajectorySolver {
         // defining our variables
         double t = conditions.theta_pitch;
         Translation3d r = conditions.target.minus(conditions.launch);
-        Translation2d v_h = conditions.chassis_velocity.unaryMinus();
-        if (!conditions.compensate_for_velocity) v_h = Translation2d.kZero;
+        Translation2d v_h;
+        if (conditions.compensate_for_velocity) {
+            v_h = conditions.chassis_velocity.unaryMinus();
+        } else {
+            v_h = Translation2d.kZero;
+        }
 
         double r_v = r.dot(UP);
         Translation2d r_h = r.toTranslation2d();

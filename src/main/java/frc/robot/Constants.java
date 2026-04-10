@@ -24,7 +24,7 @@ public final class Constants {
     static final Configuration config = Configuration.getInstance();
     public static final String robotName = "robot360";
     public static final double schedulerPeriodTime = 0.02;
-    public static final boolean enableTDNumbers = false;
+    public static final boolean enableTDNumbers = true;
 
     public enum ControllerLayout {
         COMPETITION,
@@ -141,8 +141,8 @@ public final class Constants {
     public static final class VisionConstants {
         public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
-        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.3,0.3,0.3);//VecBuilder.fill(0.1, 0.1, 0.05);
-        public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.2,0.2,0.2);//VecBuilder.fill(0.05, 0.05, 0.001);
+        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.7,0.7,0.7);//VecBuilder.fill(0.1, 0.1, 0.05);
+        public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.6,0.6,0.4);//VecBuilder.fill(0.05, 0.05, 0.001);
         
         // Maximum ambiguity accepted as a valid result from the vision systems
         public static final double kMaxValidAmbiguity = 0.2;
@@ -193,9 +193,9 @@ public final class Constants {
         public static final double kVelocityQuadTermC =  9.78677085670659030e-1;
 
         public static final InterpolatingVelocityMap kVelocityMap = new InterpolatingVelocityMap(Map.ofEntries(
-            Map.entry(Math.toRadians(45), new VelocityMapping(3.15, 9.58, 0750, 4250)),
-            Map.entry(Math.toRadians(60), new VelocityMapping(7.40, 8.25, 3250, 3650)),
-            Map.entry(Math.toRadians(65), new VelocityMapping(2.06, 7.84, 0500, 3750))
+            Map.entry(Math.toRadians(45), new VelocityMapping(3.15, 9.58,  800, 4300)),
+            Map.entry(Math.toRadians(60), new VelocityMapping(7.40, 8.25, 3300, 3700)),
+            Map.entry(Math.toRadians(65), new VelocityMapping(2.06, 7.84,  550, 3800))
         ));
 
         /*

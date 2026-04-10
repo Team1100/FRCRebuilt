@@ -371,15 +371,15 @@
 
         {"varName" : "flywheelTolerance", "value" : 500},
 
-        {"varName" : "flywheelP", "value": 0.0005},
+        {"varName" : "flywheelP", "value": 0.001},
         {"varName" : "flywheelI", "value": 0},
-        {"varName" : "flywheelD", "value": 0.0002},
+        {"varName" : "flywheelD", "value": 0},
 
-        {"varName" : "flywheelKs", "value": 0.001},
-        {"varName" : "flywheelKv", "value": 0.00185},
+        {"varName" : "flywheelKs", "value": 0.01},
+        {"varName" : "flywheelKv", "value": 0.0013},
         {"varName" : "flywheelKa", "value": 0},
 
-        {"varName" : "flywheelVelocityFactor", "value" : 1},
+        {"varName" : "flywheelVelocityFactor", "value" : 1.4},
 
         {"varName" : "turretEnabled", "value" : true},
 
@@ -498,7 +498,7 @@
             "translation": {
                 "x": -0.2814828,
                 "y": 0.2814828,
-                "z": 0.2055876
+                "z": 0.2119376
             },
             "angles": {
                 "pitch": -25,
