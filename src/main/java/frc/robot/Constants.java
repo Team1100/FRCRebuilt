@@ -206,5 +206,11 @@ public final class Constants {
         public static final int LEDLength = 49; // number of LEDs
         public static final int kPositionSplitIndex = 10;
         public static final boolean kInversePolarity = true; //dont know what it does but it seems cool
+        public static final int kBlinkSpeed = Configuration.getInstance().getInt("LED", "blinkSpeed");
+	    public static final int kCheckeredSpeed = Configuration.getInstance().getInt("LED", "checkeredSpeed");
+	    public static final int kCheckeredBlinkSpeed = Configuration.getInstance().getInt("LED", "checkeredBlinkSpeed");
+	    public static final int kSlideSpeed = Configuration.getInstance().getInt("LED", "slideSpeed");
+	    public static final int kGradientSpeed = Configuration.getInstance().getInt("LED", "gradientSpeed");
+	    public static final int kRainbowSpeed = Configuration.getInstance().getInt("LED", "rainbowSpeed");
     }
 }

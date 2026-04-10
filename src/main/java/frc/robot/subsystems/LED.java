@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import frc.robot.Constants;
 import frc.robot.testingdashboard.SubsystemBase;
 import frc.robot.testingdashboard.TDNumber;
 import frc.robot.testingdashboard.TDSendable;
@@ -17,12 +18,12 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class LED extends SubsystemBase{
 
-	public static int m_blinkSpeed;
-	public static int m_checkeredSpeed;
-	public static int m_checkeredBlinkSpeed;
-	public static int m_slideSpeed;
-	public static int m_gradientSpeed;
-	public static int m_rainbowSpeed;
+	private int m_blinkSpeed;
+	private int m_checkeredSpeed;
+	private int m_checkeredBlinkSpeed;
+	private int m_slideSpeed;
+	private int m_gradientSpeed;
+	private int m_rainbowSpeed;
     public static class LEDPattern {
 
 
@@ -129,7 +130,7 @@ public class LED extends SubsystemBase{
 		public static final LEDPattern kSolidWhite =
 			new LEDPattern(PatternType.SOLID, Color.kWhite, Color.kWhite, 1);
 		public static final LEDPattern kSolidMaroon =
-			new LEDPattern(PatternType.SOLID, Color.kRed, Color.kMaroon, 1);
+			new LEDPattern(PatternType.SOLID, Color.kMaroon, Color.kMaroon, 1);
 		public static final LEDPattern kSolidRed =
 			new LEDPattern(PatternType.SOLID, Color.kRed, Color.kRed, 1);
 		public static final LEDPattern kSolidOrange =
@@ -145,7 +146,7 @@ public class LED extends SubsystemBase{
 		public static final LEDPattern kSolidPurple =
 			new LEDPattern(PatternType.SOLID, Color.kPurple, Color.kPurple, 1);
 		public static final LEDPattern kSolidPink =
-			new LEDPattern(PatternType.SOLID, Color.kPurple, Color.kPink, 1);
+			new LEDPattern(PatternType.SOLID, Color.kPink, Color.kPink, 1);
 		public static final LEDPattern kSolidLightPink =
 			new LEDPattern(PatternType.SOLID, Color.kLightPink, Color.kLightPink, 1);
 		public static final LEDPattern kSolidBlack =
@@ -154,93 +155,93 @@ public class LED extends SubsystemBase{
 		// Blink
 		
 		public static final LEDPattern kBlinkWhite =
-			new LEDPattern(PatternType.BLINK, Color.kWhite, Color.kBlack, m_blinkSpeed);
+			new LEDPattern(PatternType.BLINK, Color.kWhite, Color.kBlack, Constants.LEDConstants.kBlinkSpeed);
 			public static final LEDPattern kBlinkMaroon =
-			new LEDPattern(PatternType.BLINK, Color.kMaroon, Color.kBlack, m_blinkSpeed);
+			new LEDPattern(PatternType.BLINK, Color.kMaroon, Color.kBlack, Constants.LEDConstants.kBlinkSpeed);
 		public static final LEDPattern kBlinkRed =
-			new LEDPattern(PatternType.BLINK, Color.kRed, Color.kBlack, m_blinkSpeed);
+			new LEDPattern(PatternType.BLINK, Color.kRed, Color.kBlack, Constants.LEDConstants.kBlinkSpeed);
 		public static final LEDPattern kBlinkOrange =
-			new LEDPattern(PatternType.BLINK, Color.kOrange, Color.kBlack, m_blinkSpeed);
+			new LEDPattern(PatternType.BLINK, Color.kOrange, Color.kBlack, Constants.LEDConstants.kBlinkSpeed);
 		public static final LEDPattern kBlinkYellow =
-			new LEDPattern(PatternType.BLINK, Color.kYellow, Color.kBlack, m_blinkSpeed);
+			new LEDPattern(PatternType.BLINK, Color.kYellow, Color.kBlack, Constants.LEDConstants.kBlinkSpeed);
 		public static final LEDPattern kBlinkGreen =
-			new LEDPattern(PatternType.BLINK, Color.kGreen, Color.kBlack, m_blinkSpeed);
+			new LEDPattern(PatternType.BLINK, Color.kGreen, Color.kBlack, Constants.LEDConstants.kBlinkSpeed);
 		public static final LEDPattern kBlinkBlue =
-			new LEDPattern(PatternType.BLINK, Color.kBlue, Color.kBlack, m_blinkSpeed);
+			new LEDPattern(PatternType.BLINK, Color.kBlue, Color.kBlack, Constants.LEDConstants.kBlinkSpeed);
 		public static final LEDPattern kBlinkPurple =
-			new LEDPattern(PatternType.BLINK, Color.kPurple, Color.kBlack, m_blinkSpeed);
+			new LEDPattern(PatternType.BLINK, Color.kPurple, Color.kBlack, Constants.LEDConstants.kBlinkSpeed);
 		public static final LEDPattern kBlinkTeamColors =
-			new LEDPattern(PatternType.BLINK, Color.kMaroon, Color.kGold, m_blinkSpeed);
+			new LEDPattern(PatternType.BLINK, Color.kMaroon, Color.kGold, Constants.LEDConstants.kBlinkSpeed);
 		public static final LEDPattern kBlinkTeamColorsInverted =
-			new LEDPattern(PatternType.BLINK, Color.kGold, Color.kMaroon, m_blinkSpeed);	
+			new LEDPattern(PatternType.BLINK, Color.kGold, Color.kMaroon, Constants.LEDConstants.kBlinkSpeed);	
 
 		// Checkered
 		public static final LEDPattern kCheckeredWhite =
-			new LEDPattern(PatternType.CHECKERED, Color.kWhite, Color.kBlack, m_checkeredSpeed);
+			new LEDPattern(PatternType.CHECKERED, Color.kWhite, Color.kBlack, Constants.LEDConstants.kCheckeredSpeed);
 		public static final LEDPattern kCheckeredMaroon =
-			new LEDPattern(PatternType.CHECKERED, Color.kMaroon, Color.kBlack, m_checkeredSpeed);
+			new LEDPattern(PatternType.CHECKERED, Color.kMaroon, Color.kBlack, Constants.LEDConstants.kCheckeredSpeed);
 		public static final LEDPattern kCheckeredRed =
-			new LEDPattern(PatternType.CHECKERED, Color.kRed, Color.kBlack, m_checkeredSpeed);
+			new LEDPattern(PatternType.CHECKERED, Color.kRed, Color.kBlack, Constants.LEDConstants.kCheckeredSpeed);
 		public static final LEDPattern kCheckeredOrange =
-			new LEDPattern(PatternType.CHECKERED, Color.kOrange, Color.kBlack, m_checkeredSpeed);
+			new LEDPattern(PatternType.CHECKERED, Color.kOrange, Color.kBlack, Constants.LEDConstants.kCheckeredSpeed);
 		public static final LEDPattern kCheckeredYellow =
-			new LEDPattern(PatternType.CHECKERED, Color.kYellow, Color.kBlack, m_checkeredSpeed);
+			new LEDPattern(PatternType.CHECKERED, Color.kYellow, Color.kBlack, Constants.LEDConstants.kCheckeredSpeed);
 		public static final LEDPattern kCheckeredGreen =
-			new LEDPattern(PatternType.CHECKERED, Color.kGreen, Color.kBlack, m_checkeredSpeed);
+			new LEDPattern(PatternType.CHECKERED, Color.kGreen, Color.kBlack, Constants.LEDConstants.kCheckeredSpeed);
 		public static final LEDPattern kCheckeredBlue =
-			new LEDPattern(PatternType.CHECKERED, Color.kBlue, Color.kBlack, m_checkeredSpeed);
+			new LEDPattern(PatternType.CHECKERED, Color.kBlue, Color.kBlack, Constants.LEDConstants.kCheckeredSpeed);
 		public static final LEDPattern kCheckeredPurple =
-			new LEDPattern(PatternType.CHECKERED, Color.kPurple, Color.kBlack, m_checkeredSpeed);
+			new LEDPattern(PatternType.CHECKERED, Color.kPurple, Color.kBlack, Constants.LEDConstants.kCheckeredSpeed);
 
 		// Checkered
 		public static final LEDPattern kCheckeredBlinkWhite =
-			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kWhite, Color.kBlack, m_checkeredBlinkSpeed);
+			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kWhite, Color.kBlack, Constants.LEDConstants.kCheckeredBlinkSpeed);
 		public static final LEDPattern kCheckeredBlinkMaroon =
-			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kMaroon, Color.kBlack, m_checkeredBlinkSpeed);
+			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kMaroon, Color.kBlack, Constants.LEDConstants.kCheckeredBlinkSpeed);
 		public static final LEDPattern kCheckeredBlinkRed =
-			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kRed, Color.kBlack, m_checkeredBlinkSpeed);
+			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kRed, Color.kBlack, Constants.LEDConstants.kCheckeredBlinkSpeed);
 		public static final LEDPattern kCheckeredBlinkOrange =
-			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kOrange, Color.kBlack, m_checkeredBlinkSpeed);
+			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kOrange, Color.kBlack, Constants.LEDConstants.kCheckeredBlinkSpeed);
 		public static final LEDPattern kCheckeredBlinkYellow =
-			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kYellow, Color.kBlack, m_checkeredBlinkSpeed);
+			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kYellow, Color.kBlack, Constants.LEDConstants.kCheckeredBlinkSpeed);
 		public static final LEDPattern kCheckeredBlinkGreen =
-			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kGreen, Color.kBlack, m_checkeredBlinkSpeed);
+			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kGreen, Color.kBlack, Constants.LEDConstants.kCheckeredBlinkSpeed);
 		public static final LEDPattern kCheckeredBlinkBlue =
-			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kBlue, Color.kBlack, m_checkeredBlinkSpeed);
+			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kBlue, Color.kBlack, Constants.LEDConstants.kCheckeredBlinkSpeed);
 		public static final LEDPattern kCheckeredBlinkPurple =
-			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kPurple, Color.kBlack, m_checkeredBlinkSpeed);
+			new LEDPattern(PatternType.CHECKERED_BLINK, Color.kPurple, Color.kBlack, Constants.LEDConstants.kCheckeredBlinkSpeed);
 
 		// Slide
 		public static final LEDPattern kSlideWhite =
-			new LEDPattern(PatternType.SLIDE, Color.kWhite, Color.kBlack, m_slideSpeed);
+			new LEDPattern(PatternType.SLIDE, Color.kWhite, Color.kBlack, Constants.LEDConstants.kSlideSpeed);
 		public static final LEDPattern kSlideRed =
-			new LEDPattern(PatternType.SLIDE, Color.kRed, Color.kBlack, m_slideSpeed);
+			new LEDPattern(PatternType.SLIDE, Color.kRed, Color.kBlack, Constants.LEDConstants.kSlideSpeed);
 		public static final LEDPattern kSlideMaroon =
-			new LEDPattern(PatternType.SLIDE, Color.kMaroon, Color.kBlack, m_slideSpeed);
+			new LEDPattern(PatternType.SLIDE, Color.kMaroon, Color.kBlack, Constants.LEDConstants.kSlideSpeed);
 		public static final LEDPattern kSlideOrange =
-			new LEDPattern(PatternType.SLIDE, Color.kOrange, Color.kBlack, m_slideSpeed);
+			new LEDPattern(PatternType.SLIDE, Color.kOrange, Color.kBlack, Constants.LEDConstants.kSlideSpeed);
 		public static final LEDPattern kSlideYellow =
-			new LEDPattern(PatternType.SLIDE, Color.kYellow, Color.kBlack, m_slideSpeed);
+			new LEDPattern(PatternType.SLIDE, Color.kYellow, Color.kBlack, Constants.LEDConstants.kSlideSpeed);
 		public static final LEDPattern kSlideGreen =
-			new LEDPattern(PatternType.SLIDE, Color.kGreen, Color.kBlack, m_slideSpeed);
+			new LEDPattern(PatternType.SLIDE, Color.kGreen, Color.kBlack, Constants.LEDConstants.kSlideSpeed);
 		public static final LEDPattern kSlideBlue =
-			new LEDPattern(PatternType.SLIDE, Color.kBlue, Color.kBlack, m_slideSpeed);
+			new LEDPattern(PatternType.SLIDE, Color.kBlue, Color.kBlack, Constants.LEDConstants.kSlideSpeed);
 		public static final LEDPattern kSlidePurple =
-			new LEDPattern(PatternType.SLIDE, Color.kPurple, Color.kBlack, m_slideSpeed);
+			new LEDPattern(PatternType.SLIDE, Color.kPurple, Color.kBlack, Constants.LEDConstants.kSlideSpeed);
 		public static final LEDPattern kSlideInverted =
-			new LEDPattern(PatternType.SLIDE, Color.kBlack, Color.kWhite, m_slideSpeed);
+			new LEDPattern(PatternType.SLIDE, Color.kBlack, Color.kWhite, Constants.LEDConstants.kSlideSpeed);
 		public static final LEDPattern kSlideTrans =
-		new LEDPattern(PatternType.SLIDE, Color.kLightBlue, Color.kLightPink, m_gradientSpeed);
+		new LEDPattern(PatternType.SLIDE, Color.kLightBlue, Color.kLightPink, Constants.LEDConstants.kSlideSpeed);
 
 		// Gradient
 		public static final LEDPattern kGradientBW =
-			new LEDPattern(PatternType.GRADIENT, Color.kBlack, Color.kWhite, m_gradientSpeed);
+			new LEDPattern(PatternType.GRADIENT, Color.kBlack, Color.kWhite, Constants.LEDConstants.kGradientSpeed);
 			public static final LEDPattern kGradientTrans =
-			new LEDPattern(PatternType.GRADIENT, Color.kLightBlue, Color.kLightPink, m_gradientSpeed);
+			new LEDPattern(PatternType.GRADIENT, Color.kLightBlue, Color.kLightPink, Constants.LEDConstants.kGradientSpeed);
 
 		// Rainbow
 		public static final LEDPattern kRainbow =
-			new LEDPattern(PatternType.RAINBOW, Color.kWhite, Color.kWhite, 1);
+			new LEDPattern(PatternType.RAINBOW, Color.kWhite, Color.kWhite, Constants.LEDConstants.kRainbowSpeed);
     }
 
 	public static class LEDSection {
@@ -305,8 +306,6 @@ public class LED extends SubsystemBase{
 		m_stageMechanism.setBackgroundColor(new Color8Bit(0, 0, 0));
 		new TDSendable(this, "StageIndicator", "StageIndicator", m_stageMechanism);
 		SmartDashboard.putData(m_stageMechanism);
-
-		setSpeeds();
 		
     }
 
@@ -364,10 +363,6 @@ public class LED extends SubsystemBase{
 		//System.out.println(stateTimeLeft);
         if (stateTimeLeft < cfgDbl("stateChangeWarningTime")){
 			setPattern(0, LEDPattern.kBlinkTeamColors, LEDSection.Priority.WARNING);
-			setPattern(1, LEDPattern.kBlinkTeamColorsInverted, LEDSection.Priority.WARNING);
-			setPattern(2, LEDPattern.kBlinkTeamColors, LEDSection.Priority.WARNING);
-			setPattern(3, LEDPattern.kBlinkTeamColorsInverted, LEDSection.Priority.WARNING);
-			setPattern(4, LEDPattern.kBlinkTeamColors, LEDSection.Priority.WARNING);
 		}
 
 		Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
@@ -378,34 +373,18 @@ public class LED extends SubsystemBase{
 			switch (gameState) {
 				case AUTO:
 					setPattern(0, LEDPattern.kSolidYellow, LEDSection.Priority.BASIC);
-					setPattern(1, LEDPattern.kSolidYellow, LEDSection.Priority.BASIC);
-					setPattern(2, LEDPattern.kSolidYellow, LEDSection.Priority.BASIC);
-					setPattern(3, LEDPattern.kSolidYellow, LEDSection.Priority.BASIC);
-					setPattern(4, LEDPattern.kSolidYellow, LEDSection.Priority.BASIC);
 					color = new Color8Bit(0,0,0);
 					break;
 				case TRANSITION:
-					setPattern(0, LEDPattern.kSolidLightBlue, LEDSection.Priority.BASIC);
-					setPattern(1, LEDPattern.kSolidLightPink, LEDSection.Priority.BASIC);
-					setPattern(2, LEDPattern.kSolidWhite, LEDSection.Priority.BASIC);
-					setPattern(3, LEDPattern.kSolidLightPink, LEDSection.Priority.BASIC);
-					setPattern(4, LEDPattern.kSolidLightBlue, LEDSection.Priority.BASIC);
+					setPattern(0, LEDPattern.kGradientTrans, LEDSection.Priority.BASIC);
 					color = new Color8Bit(255,0,255);
 					break;
 				case RED_START:
 					setPattern(0, LEDPattern.kSolidRed, LEDSection.Priority.BASIC);
-					setPattern(1, LEDPattern.kSolidWhite, LEDSection.Priority.BASIC);
-					setPattern(2, LEDPattern.kSolidRed, LEDSection.Priority.BASIC);
-					setPattern(3, LEDPattern.kSolidWhite, LEDSection.Priority.BASIC);
-					setPattern(4, LEDPattern.kSolidRed, LEDSection.Priority.BASIC);
 					color = alliance == Alliance.Red ? new Color8Bit(0,255,0) : new Color8Bit(255,0,0);
 					break;
 				case BLUE_START:
 					setPattern(0, LEDPattern.kSolidBlue, LEDSection.Priority.BASIC);
-					setPattern(1, LEDPattern.kSolidWhite, LEDSection.Priority.BASIC);
-					setPattern(2, LEDPattern.kSolidBlue, LEDSection.Priority.BASIC);
-					setPattern(3, LEDPattern.kSolidWhite, LEDSection.Priority.BASIC);
-					setPattern(4, LEDPattern.kSolidBlue, LEDSection.Priority.BASIC);
 					color = alliance == Alliance.Blue ? new Color8Bit(0,255,0) : new Color8Bit(255,0,0);
 					break;
 				case ENDGAME:
@@ -421,15 +400,6 @@ public class LED extends SubsystemBase{
 		}
 		m_stageMechanism.setBackgroundColor(color);
     }
-
-	public void setSpeeds(){
-		m_blinkSpeed = cfgInt("blinkSpeed");
-		m_checkeredSpeed = cfgInt("checkeredSpeed");
-		m_checkeredBlinkSpeed = cfgInt("checkeredBlinkSpeed");
-		m_slideSpeed = cfgInt("slideSpeed");
-		m_gradientSpeed = cfgInt("gradientSpeed");
-		m_rainbowSpeed = cfgInt("rainbowSpeed");
-	}
 
     @Override
     public void periodic() {
