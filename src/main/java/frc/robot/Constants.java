@@ -194,7 +194,7 @@ public final class Constants {
 
         public static final InterpolatingVelocityMap kVelocityMap = new InterpolatingVelocityMap(Map.ofEntries(
             Map.entry(Math.toRadians(45), new VelocityMapping(3.15, 9.58,  800, 4300)),
-            Map.entry(Math.toRadians(60), new VelocityMapping(7.40, 8.25, 3300, 3700)),
+            Map.entry(Math.toRadians(60), new VelocityMapping(6.50, 8.25, 2800, 3550)),
             Map.entry(Math.toRadians(65), new VelocityMapping(2.06, 7.84,  550, 3800))
         ));
 

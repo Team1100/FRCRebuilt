@@ -526,8 +526,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean flywheelAtTarget() {
-        return MathUtil.isNear(m_TDflywheelVelocity.get(), m_turretMotor.getEncoder().getVelocity(),
-                cfgDbl("flywheelTolerance"));
+        return MathUtil.isNear(m_TDflywheelVelocity.get(), m_flywheelLeftMotor.getEncoder().getVelocity(),
+                500);
     }
 
     public double getHoodTarget() {

@@ -175,7 +175,7 @@ public class ShootToPose extends Command {
 
         // System.out.println(m_Shooter.turretAtTarget() + " " + m_Shooter.flywheelAtTarget() + " " + m_Shooter.hoodAtTarget());
         if (m_Shooter.flywheelAtTarget()) {
-            LED.getInstance().setPattern(1, LEDPattern.kCheckeredBlinkGreen, Priority.INFO);
+            // LED.getInstance().setPattern(1, LEDPattern.kCheckeredBlinkGreen, Priority.INFO);
             m_Shooter.chimneySpeed(1);
         } else {
             // LED.getInstance().setPattern(1, LEDPattern.kCheckeredBlinkYellow, Priority.INFO);

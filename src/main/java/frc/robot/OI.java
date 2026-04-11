@@ -260,10 +260,7 @@ public class OI {
 
 				.whileTrue(driver.leftTrigger(), new SlowSwerveDrive(m_driveInputs))
 
-				.whileTrue(driver.rightTrigger(), Commands.parallel(
-					new ChimneyUp(),
-					new SpindexerSpin()
-				))
+				.whileTrue(driver.rightTrigger(), new SpindexerSpin())
 
 				.switchSubmap(driverIndicator, driver.start(), Submap.MANUAL)
 			.endSubmap()
