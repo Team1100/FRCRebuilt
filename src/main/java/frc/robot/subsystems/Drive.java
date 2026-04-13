@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -20,6 +21,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -104,6 +106,8 @@ public class Drive extends SubsystemBase {
                       .linearPosition(m_BackLeft.getDrivePosition())
                       .linearVelocity(m_BackLeft.getDriveVelocity());
   };
+
+  private ArrayList<ChassisSpeeds> m_recentSpeeds;
   private Mechanism mech = new Mechanism(out, log, this, "Swerve");
   private SysIdRoutine m_sysid = new SysIdRoutine(cfg, mech);
 
@@ -169,6 +173,8 @@ public class Drive extends SubsystemBase {
 
     m_field = new Field2d();
     new TDSendable(this, "Field", "Position", m_field);
+
+    m_recentSpeeds = new ArrayList<>();
 
     TDxSpeedCommanded = new TDNumber(this, "Drive Input", "XInputSpeed");
     TDySpeedCommanded = new TDNumber(this, "Drive Input", "YInputSpeed");
@@ -266,6 +272,12 @@ public class Drive extends SubsystemBase {
         m_BackRight.getPosition()
       });
     m_poseLogger.setStruct(updated);
+
+    ChassisSpeeds currentSpeeds = getMeasuredSpeeds();
+    m_recentSpeeds.add(currentSpeeds);
+    if (m_recentSpeeds.size() > 5) {
+      m_recentSpeeds.remove(0);
+    }
 
     updateTD();
     super.periodic();
@@ -596,5 +608,33 @@ public class Drive extends SubsystemBase {
    m_lastSpeeds = limitedSpeeds;
    m_prevTime = currentTime;
    return limitedSpeeds;
+  }
+
+  public Twist2d getFieldRelativeTwist(double dtSeconds) {
+    if (m_recentSpeeds.size() == 0) {
+      return new Twist2d();
+    }
+    ChassisSpeeds recentAcceleration = new ChassisSpeeds();
+    for (int i = 1; i < m_recentSpeeds.size(); i++) {
+      ChassisSpeeds current = m_recentSpeeds.get(i);
+      ChassisSpeeds previous = m_recentSpeeds.get(i-1);
+
+      recentAcceleration.vxMetersPerSecond += (current.vxMetersPerSecond - previous.vxMetersPerSecond);
+      recentAcceleration.vyMetersPerSecond += (current.vyMetersPerSecond - previous.vyMetersPerSecond);
+      recentAcceleration.omegaRadiansPerSecond += (current.omegaRadiansPerSecond - previous.omegaRadiansPerSecond);
+    }
+
+    recentAcceleration.vxMetersPerSecond /= m_recentSpeeds.size();
+    recentAcceleration.vyMetersPerSecond /= m_recentSpeeds.size();
+    recentAcceleration.omegaRadiansPerSecond /= m_recentSpeeds.size();
+
+    ChassisSpeeds current = m_recentSpeeds.get(m_recentSpeeds.size()-1);
+    ChassisSpeeds acceleratedSpeeds = new ChassisSpeeds(
+      current.vxMetersPerSecond + recentAcceleration.vxMetersPerSecond * dtSeconds,
+      current.vyMetersPerSecond + recentAcceleration.vyMetersPerSecond * dtSeconds,
+      current.omegaRadiansPerSecond + recentAcceleration.omegaRadiansPerSecond * dtSeconds
+    );
+
+    return acceleratedSpeeds.toTwist2d(dtSeconds);
   }
 }

@@ -131,8 +131,8 @@ public class ShootToPose extends Command {
         for (int i = 0; i < ITERATIONS; i++) {
             Translation3d compensatingTarget;
             if (params != null) {
-                Twist2d twist = chassisSpeeds.toTwist2d(params.time);
-                compensatingTarget = target.exp(new Twist3d(-twist.dx, -twist.dy, 0, 0, 0, -twist.dtheta)).getTranslation();
+                Twist2d twist = m_Drive.getFieldRelativeTwist(params.time);//chassisSpeeds.toTwist2d(params.time);
+                compensatingTarget = target.exp(new Twist3d(twist.dx, twist.dy, 0, 0, 0, twist.dtheta)).getTranslation();
             } else {
                 compensatingTarget = target.getTranslation();
             }
@@ -174,7 +174,7 @@ public class ShootToPose extends Command {
         m_Shooter.setFlywheelTarget(flywheelRPM);
 
         // System.out.println(m_Shooter.turretAtTarget() + " " + m_Shooter.flywheelAtTarget() + " " + m_Shooter.hoodAtTarget());
-        if (m_Shooter.flywheelAtTarget()) {
+        if (m_Shooter.flywheelAtTarget() && m_Shooter.hoodAtTarget()) {
             // LED.getInstance().setPattern(1, LEDPattern.kCheckeredBlinkGreen, Priority.INFO);
             m_Shooter.chimneySpeed(1);
         } else {

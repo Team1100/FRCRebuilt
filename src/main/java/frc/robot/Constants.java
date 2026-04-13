@@ -32,7 +32,7 @@ public final class Constants {
         DEMO2,
     }
 
-    public static final ControllerLayout CONTROLLER_LAYOUT = ControllerLayout.DEMO2;
+    public static final ControllerLayout CONTROLLER_LAYOUT = ControllerLayout.DEBUG;
 
     public static final class SwerveModuleConstants {
         public static final boolean kTurningEncoderInverted = true;
@@ -142,7 +142,7 @@ public final class Constants {
     public static final class VisionConstants {
         public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
-        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.7,0.7,0.7);//VecBuilder.fill(0.1, 0.1, 0.05);
+        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.2,1.2,0.8);//VecBuilder.fill(0.1, 0.1, 0.05);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.6,0.6,0.4);//VecBuilder.fill(0.05, 0.05, 0.001);
         
         // Maximum ambiguity accepted as a valid result from the vision systems

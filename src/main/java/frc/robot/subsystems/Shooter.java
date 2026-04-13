@@ -538,6 +538,7 @@ public class Shooter extends SubsystemBase {
         return m_robotToTurret;
     }
 
+    // TODO: mention that this positions the turret at chassis center, not turret pose
     public void resetTurretEstimatorPose(Pose3d newPose) {
         double angle = Math.toRadians(m_Drive.getGyroAngle());
         m_turretPoseEstimator.resetPosition(

@@ -524,6 +524,22 @@
             "primaryStrat": "MULTI_TAG_PNP_ON_COPROCESSOR",
             "backupStrat": "LOWEST_AMBIGUITY",
             "includeInPoseEstimates": true
+        },
+        {
+            "name": "UnderPlateCamera",
+            "translation": {
+                "x": -0.313,
+                "y": 0.189,
+                "z": -0.307
+            },
+            "angles": {
+                "pitch": -10,
+                "yaw": 295,
+                "roll": 0
+            },
+            "primaryStrat": "MULTI_TAG_PNP_ON_COPROCESSOR",
+            "backupStrat": "LOWEST_AMBIGUITY",
+            "includeInPoseEstimates": true
         }
 	]
 }
