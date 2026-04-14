@@ -346,8 +346,8 @@
 		{"varName" : "rollerEnabled", "value" : true},
 
 		{"varName" : "rollerSpeed", "value" : 0.7}, 
-		{"varName" : "rollerStallLimit", "value" : 10},
-		{"varName" : "rollerFreeLimit", "value" : 40},
+		{"varName" : "rollerStallLimit", "value" : 80},
+		{"varName" : "rollerFreeLimit", "value" : 80},
 
         {"varName" : "rollerUnjamSpeed", "value" : 0.5},
         {"varName" : "deployerUnjamSpeed", "value" : 0.5}, 
