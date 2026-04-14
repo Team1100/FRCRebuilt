@@ -20,6 +20,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.InterpolatingMatrixTreeMap;
+import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -37,6 +38,7 @@ import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Constants;
@@ -139,6 +141,7 @@ public class Shooter extends SubsystemBase {
     Field2d m_turretPoseField;
     private Pose3d m_turretPose;
     private boolean m_turretGotResult;
+    private double m_lastVisionUpdate;
 
     private Field2d m_trajectoryDisplay;
 
@@ -370,6 +373,8 @@ public class Shooter extends SubsystemBase {
             m_Drive.getModulePositions(), 
             new Pose3d(),
             m_robotToTurret);
+
+        m_lastVisionUpdate = 0;
 
         m_turretPoseField = new Field2d();
         new TDSendable(this, "Field", "Turret Position", m_turretPoseField);
@@ -874,6 +879,7 @@ public class Shooter extends SubsystemBase {
         Optional<VisionEstimationResult> result = Vision.getInstance().getLatestFromCamera("TurretCamera");
         if (result.isPresent()) {
             m_turretPoseEstimator.addVisionMeasurement(result.get().estimatedPose, result.get().timestamp);
+            m_lastVisionUpdate = result.get().timestamp;
 
             VisionEstimationResult turretEstimation = result.get();
 
@@ -902,8 +908,26 @@ public class Shooter extends SubsystemBase {
             m_turretGotResult = true;
         }
 
+        validateTurretLocation();
+
         m_turretPoseField.setRobotPose(m_turretPoseEstimator.getEstimatedPosition().toPose2d());
         m_turretPoseField.getObject("Hub").setPose(FieldUtils.getInstance().getHubPose().toPose2d());
+    }
+
+    private void validateTurretLocation() {
+        double now = MathSharedStore.getTimestamp();
+        if(now - m_lastVisionUpdate > Constants.ShooterConstants.kTurretVisionTimeout) {
+            double driveVisionTime = m_Drive.getLastVisionTime();
+            if(now - driveVisionTime > Constants.ShooterConstants.kTurretVisionTimeout){
+                if(FieldUtils.getInstance().isInField(m_Drive.getPose())
+                 && m_lastVisionUpdate < driveVisionTime){
+                    m_turretPoseEstimator.resetPose(new Pose3d(m_Drive.getPose()));
+                }
+            } else {
+                //This resets the underlying odometry's pose so it does want the chassis pose, not the offset turret pose
+                m_turretPoseEstimator.resetPose(new Pose3d(m_Drive.getPose()));
+            }
+        }
     }
 
     private void runHood() {

@@ -248,4 +248,14 @@ public class FieldUtils{
     private final double c_fieldWidth = Constants.VisionConstants.kTagLayout.getFieldWidth();
     private final double c_trenchWidthMeters = Units.inchesToMeters(62.65); 
     private final double c_trenchToDriverStationM = Units.inchesToMeters(182.11);
+
+    public boolean isInField(Pose2d pose)
+    {
+        return (
+            pose.getX() > 0 && 
+            pose.getX() < c_fieldLength &&
+            pose.getY() > 0 &&
+            pose.getY() > c_fieldWidth
+        );
+    }
 }

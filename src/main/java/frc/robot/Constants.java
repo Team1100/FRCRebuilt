@@ -185,6 +185,8 @@ public final class Constants {
         public static final double kTurretMaxVelocity = 7.5;
         public static final double kBasicShooterRPM = 2000;
 
+        public static final double kTurretVisionTimeout = 4.0; //Time after which we stop trusting the turret pose without vision updates
+
         public static final double kChimneySpeed = 1.0;
 
         public static final boolean kVelocityMapQuadratic = false;
