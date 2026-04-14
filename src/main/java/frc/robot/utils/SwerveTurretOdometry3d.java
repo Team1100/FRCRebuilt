@@ -48,6 +48,12 @@ public class SwerveTurretOdometry3d extends SwerveDriveOdometry3d
         return update(gyroAngle, modulePositions);
     }
 
+    public Pose3d transformToChassisPose(Pose3d turretPose) {
+        Rotation3d chassisRotation = turretPose.getRotation().rotateBy(new Rotation3d(m_mostRecentTurretAngle.unaryMinus()));
+        Pose3d chassisRotatedTurretPose = new Pose3d(turretPose.getTranslation(), chassisRotation);
+        return chassisRotatedTurretPose.transformBy(m_baseToTurret.inverse());
+    }
+
     @Override
     public Pose3d getPoseMeters() {
         return super.getPoseMeters().transformBy(m_baseToTurret).transformBy(new Transform3d(new Translation3d(), new Rotation3d(m_mostRecentTurretAngle)));

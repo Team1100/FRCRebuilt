@@ -70,6 +70,11 @@ public class SwerveTurretPoseEstimator3d extends PoseEstimator3d<SwerveModulePos
     m_numModules = modulePositions.length;
   }
 
+  public Pose3d getEstimatedChassisPose() {
+    Pose3d turretPose = getEstimatedPosition();
+    return m_odometry.transformToChassisPose(turretPose);
+  }
+
   public Pose3d update(Rotation3d gyroAngle, Rotation2d turretAngle, SwerveModulePosition[] wheelPositions) {
         return updateWithTime(MathSharedStore.getTimestamp(), gyroAngle, turretAngle, wheelPositions);
     }

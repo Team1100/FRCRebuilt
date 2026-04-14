@@ -543,7 +543,7 @@ public class Shooter extends SubsystemBase {
         return m_robotToTurret;
     }
 
-    // TODO: mention that this positions the turret at chassis center, not turret pose
+    //This resets the underlying odometry's pose so it does want the chassis pose, not the offset turret pose
     public void resetTurretEstimatorPose(Pose3d newPose) {
         double angle = Math.toRadians(m_Drive.getGyroAngle());
         m_turretPoseEstimator.resetPosition(
@@ -680,7 +680,7 @@ public class Shooter extends SubsystemBase {
         // current target position, robot oriented
         double robotAngle = m_turretMotor.getEncoder().getPosition();
 
-        Pose2d chassisPose = m_Drive.getPose();
+        Pose2d chassisPose = m_turretPoseEstimator.getEstimatedChassisPose().toPose2d();
         Rotation2d chassisRotation = chassisPose.getRotation().plus(Rotation2d.k180deg);
         double chassisAngle = chassisRotation.getRadians();
         // current target angle, robot oriented
