@@ -346,8 +346,8 @@
 		{"varName" : "rollerEnabled", "value" : true},
 
 		{"varName" : "rollerSpeed", "value" : 0.7}, 
-		{"varName" : "rollerStallLimit", "value" : 10},
-		{"varName" : "rollerFreeLimit", "value" : 40},
+		{"varName" : "rollerStallLimit", "value" : 80},
+		{"varName" : "rollerFreeLimit", "value" : 80},
 
         {"varName" : "rollerUnjamSpeed", "value" : 0.5},
         {"varName" : "deployerUnjamSpeed", "value" : 0.5}, 
@@ -519,6 +519,22 @@
             "angles": {
                 "pitch": -25,
                 "yaw": -135,
+                "roll": 0
+            },
+            "primaryStrat": "MULTI_TAG_PNP_ON_COPROCESSOR",
+            "backupStrat": "LOWEST_AMBIGUITY",
+            "includeInPoseEstimates": true
+        },
+        {
+            "name": "UnderPlateCamera",
+            "translation": {
+                "x": -0.313,
+                "y": 0.189,
+                "z": -0.307
+            },
+            "angles": {
+                "pitch": -10,
+                "yaw": 295,
                 "roll": 0
             },
             "primaryStrat": "MULTI_TAG_PNP_ON_COPROCESSOR",

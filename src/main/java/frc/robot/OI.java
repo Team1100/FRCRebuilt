@@ -89,10 +89,16 @@ public class OI {
     }
 
 	public void bindControls() {
-		if (Constants.CONTROLLER_LAYOUT == ControllerLayout.COMPETITION) {
-			bindCompetitionLayout(m_driverXboxController, m_operatorXboxController);
-		} else {
-			bindDebugLayout(m_driverXboxController);
+		switch (Constants.CONTROLLER_LAYOUT) {
+			case COMPETITION:
+				bindCompetitionLayout(m_driverXboxController, m_operatorXboxController);
+				break;
+			case DEBUG:
+				bindDebugLayout(m_driverXboxController);
+				break;
+			case DEMO2:
+				bindDemo2Layout(m_driverXboxController, m_operatorXboxController);
+				break;
 		}
     }
 	
@@ -260,10 +266,7 @@ public class OI {
 
 				.whileTrue(driver.leftTrigger(), new SlowSwerveDrive(m_driveInputs))
 
-				.whileTrue(driver.rightTrigger(), Commands.parallel(
-					new ChimneyUp(),
-					new SpindexerSpin()
-				))
+				.whileTrue(driver.rightTrigger(), new SpindexerSpin())
 
 				.switchSubmap(driverIndicator, driver.start(), Submap.MANUAL)
 			.endSubmap()
@@ -274,6 +277,37 @@ public class OI {
 
 				.switchSubmap(driverIndicator, driver.start(), Submap.AUTO)
 			.endSubmap()
+
+			.register();
+	}
+
+	public void bindDemo2Layout(CommandXboxController driver, CommandXboxController operator) {
+		new TriggerBuilder<Submap>(m_driverSubmap)
+			.onTrue(driver.back(), new InstantCommand(()->Drive.getInstance().zeroHeading()))
+
+			.whileTrue(driver.leftBumper(), new IntakeIn())
+			.whileTrue(driver.povUp(), new IntakeOscillate())
+			.whileTrue(driver.rightBumper(), new IntakeAAAAA())
+			.whileTrue(driver.b(), new DeployerOut())
+			.whileTrue(driver.rightTrigger(), new DeployerIn())
+
+			.whileTrue(driver.leftTrigger(), new SlowSwerveDrive(m_driveInputs))
+
+			.register();
+
+		new TriggerBuilder<Submap>(m_operatorSubmap)
+			.onTrue(operator.b(), new CalibrateTurretFull())
+
+			.whileTrue(operator.rightTrigger(), Commands.parallel(
+				new ChimneyUp(),
+				new SpindexerSpin()
+			))
+			.whileTrue(operator.leftTrigger(), Commands.parallel(
+				new ChimneyDown(),
+				new SpindexerReverse()
+			))
+
+			.map(operator.a(), new ManualShooterControl(), Trigger::toggleOnTrue)
 
 			.register();
 	}

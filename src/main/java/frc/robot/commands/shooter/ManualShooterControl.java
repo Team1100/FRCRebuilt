@@ -34,7 +34,7 @@ public class ManualShooterControl extends Command{
         XboxController operator = m_OI.getOperatorController();
 
         m_turretAngle += MathUtil.applyDeadband(-operator.getLeftX(), 0.05) * Constants.schedulerPeriodTime * 0.5;
-        //m_turretAngle = MathUtil.clamp(m_turretAngle, Math.toRadians(-160), Math.toRadians(160));
+        m_turretAngle = MathUtil.angleModulus(m_turretAngle);
         m_hoodAngle += MathUtil.applyDeadband(operator.getRightY(), 0.05) * Constants.schedulerPeriodTime * 10.0;
         m_hoodAngle = MathUtil.clamp(m_hoodAngle, Constants.ShooterConstants.kHoodMinAngle, Constants.ShooterConstants.kHoodMaxAngle);
 
@@ -43,8 +43,8 @@ public class ManualShooterControl extends Command{
             (operator.getLeftBumperButton() ? Constants.schedulerPeriodTime * 2000 : 0);
         m_flywheelSpeed = Math.min(Math.max(m_flywheelSpeed, 0), 6000);
 
-        //m_Shooter.setTurretTarget(m_turretAngle, 0);
-        //m_Shooter.setFlywheelTarget(m_flywheelSpeed);
+        m_Shooter.setTurretTarget(m_turretAngle, 0);
+        m_Shooter.setFlywheelTarget(m_flywheelSpeed);
         m_Shooter.setHoodTarget(m_hoodAngle);
     }
 

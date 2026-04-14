@@ -28,7 +28,8 @@ public final class Constants {
 
     public enum ControllerLayout {
         COMPETITION,
-        DEBUG
+        DEBUG,
+        DEMO2,
     }
 
     public static final ControllerLayout CONTROLLER_LAYOUT = ControllerLayout.DEBUG;
@@ -141,7 +142,7 @@ public final class Constants {
     public static final class VisionConstants {
         public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
-        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(0.7,0.7,0.7);//VecBuilder.fill(0.1, 0.1, 0.05);
+        public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.2,1.2,0.8);//VecBuilder.fill(0.1, 0.1, 0.05);
         public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.6,0.6,0.4);//VecBuilder.fill(0.05, 0.05, 0.001);
         
         // Maximum ambiguity accepted as a valid result from the vision systems
@@ -194,7 +195,7 @@ public final class Constants {
 
         public static final InterpolatingVelocityMap kVelocityMap = new InterpolatingVelocityMap(Map.ofEntries(
             Map.entry(Math.toRadians(45), new VelocityMapping(3.15, 9.58,  800, 4300)),
-            Map.entry(Math.toRadians(60), new VelocityMapping(7.40, 8.25, 3300, 3700)),
+            Map.entry(Math.toRadians(60), new VelocityMapping(6.50, 8.25, 2800, 3550)),
             Map.entry(Math.toRadians(65), new VelocityMapping(2.06, 7.84,  550, 3800))
         ));
 
