@@ -346,8 +346,8 @@
 		{"varName" : "rollerEnabled", "value" : true},
 
 		{"varName" : "rollerSpeed", "value" : 0.7}, 
-		{"varName" : "rollerStallLimit", "value" : 80},
-		{"varName" : "rollerFreeLimit", "value" : 80},
+		{"varName" : "rollerStallLimit", "value" : 100},
+		{"varName" : "rollerFreeLimit", "value" : 100},
 
         {"varName" : "rollerUnjamSpeed", "value" : 0.5},
         {"varName" : "deployerUnjamSpeed", "value" : 0.5}, 
@@ -498,7 +498,7 @@
             "translation": {
                 "x": -0.2814828,
                 "y": 0.2814828,
-                "z": 0.2119376
+                "z": 0.244525
             },
             "angles": {
                 "pitch": -25,
@@ -514,7 +514,7 @@
             "translation": {
                 "x": -0.2814828,
                 "y": -0.2814828,
-                "z": 0.2055876
+                "z": 0.244525
             },
             "angles": {
                 "pitch": -25,

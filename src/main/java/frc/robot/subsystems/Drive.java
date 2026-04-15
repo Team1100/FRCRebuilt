@@ -158,6 +158,8 @@ public class Drive extends SubsystemBase {
 
   private final StructLogger m_poseLogger;
 
+  private double m_lastVisionUpdate;
+
   /** Creates a new Drive. */
   private Drive() {
     super("Drive");
@@ -249,6 +251,8 @@ public class Drive extends SubsystemBase {
     });
 
     m_poseLogger = StructLogger.pose2dLogger(this, "DrivePose", null);
+
+    m_lastVisionUpdate = 0;
   }
 
   public static Drive getInstance() {
@@ -273,7 +277,7 @@ public class Drive extends SubsystemBase {
       });
     m_poseLogger.setStruct(updated);
 
-    ChassisSpeeds currentSpeeds = getMeasuredSpeeds();
+    ChassisSpeeds currentSpeeds = getMeasuredFieldRelativeSpeeds();
     m_recentSpeeds.add(currentSpeeds);
     if (m_recentSpeeds.size() > 5) {
       m_recentSpeeds.remove(0);
@@ -350,6 +354,14 @@ public class Drive extends SubsystemBase {
    */
   public void addVisionMeasurement(Pose2d pose, double timestamp, Matrix<N3, N1> stdDevs) {
     m_DrivePoseEstimator.addVisionMeasurement(pose, timestamp, stdDevs);
+    if(timestamp > m_lastVisionUpdate)
+    {
+      m_lastVisionUpdate = timestamp;
+    }
+  }
+
+  public double getLastVisionTime() {
+    return m_lastVisionUpdate;
   }
 
   /*

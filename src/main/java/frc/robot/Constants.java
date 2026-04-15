@@ -32,7 +32,7 @@ public final class Constants {
         DEMO2,
     }
 
-    public static final ControllerLayout CONTROLLER_LAYOUT = ControllerLayout.DEBUG;
+    public static final ControllerLayout CONTROLLER_LAYOUT = ControllerLayout.COMPETITION;
 
     public static final class SwerveModuleConstants {
         public static final boolean kTurningEncoderInverted = true;
@@ -184,6 +184,8 @@ public final class Constants {
         public static final double kTurretMaxAccel = 10*Math.PI;
         public static final double kTurretMaxVelocity = 7.5;
         public static final double kBasicShooterRPM = 2000;
+
+        public static final double kTurretVisionTimeout = 4.0; //Time after which we stop trusting the turret pose without vision updates
 
         public static final double kChimneySpeed = 1.0;
 

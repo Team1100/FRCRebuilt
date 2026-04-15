@@ -132,7 +132,7 @@ public class ShootToPose extends Command {
             Translation3d compensatingTarget;
             if (params != null) {
                 Twist2d twist = m_Drive.getFieldRelativeTwist(params.time);//chassisSpeeds.toTwist2d(params.time);
-                compensatingTarget = target.exp(new Twist3d(twist.dx, twist.dy, 0, 0, 0, twist.dtheta)).getTranslation();
+                compensatingTarget = target.exp(new Twist3d(-twist.dx, -twist.dy, 0, 0, 0, -twist.dtheta)).getTranslation();
             } else {
                 compensatingTarget = target.getTranslation();
             }
