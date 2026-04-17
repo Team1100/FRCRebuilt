@@ -51,7 +51,7 @@ public class DriveToPose extends Command {
     TDCurrentTargetY = new TDNumber(m_drive, "Test Outputs", "Current Target Y");
     TDCurrentTargetAngle = new TDNumber(m_drive, "Test Outputs", "Current Target Angle");
 
-   //  m_thetaController = new ProfiledPIDController(5.0, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
+    m_thetaController = new ProfiledPIDController(5.0, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
     m_thetaController.enableContinuousInput(-Math.PI, Math.PI);
     m_driveXController = new ProfiledPIDController(5, 0, 0, new Constraints(4.8, 4.8));
     m_driveYController = new ProfiledPIDController(5, 0, 0, new Constraints(4.8, 4.8));
@@ -86,6 +86,7 @@ public class DriveToPose extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println(m_targetPose);
     if(m_targetPose != null)
     {
       Pose2d currentPose = m_feedbackSupplier.get();

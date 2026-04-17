@@ -121,6 +121,13 @@ public class FieldUtils{
         return getTagPose(getAllianceAprilTags().frontRightHub).transformBy(tagToHub);
     }
 
+    public Pose3d getClosestHubPose(Pose2d robotPose) {
+        Transform3d tagToHub = new Transform3d(
+            new Translation3d(-Units.inchesToMeters(23.5), 0, Units.inchesToMeters(18.0)), Rotation3d.kZero);
+        AllianceAprilTags closestAlliance = inAllianceHalf(robotPose, Alliance.Blue) ? BlueTags : RedTags;
+        return getTagPose(closestAlliance.frontRightHub).transformBy(tagToHub);
+    }
+
     public enum AutoWinner {
         RED,
         BLUE

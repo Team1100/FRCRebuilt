@@ -641,10 +641,11 @@ public class Drive extends SubsystemBase {
     recentAcceleration.omegaRadiansPerSecond /= m_recentSpeeds.size();
 
     ChassisSpeeds current = m_recentSpeeds.get(m_recentSpeeds.size()-1);
+
     ChassisSpeeds acceleratedSpeeds = new ChassisSpeeds(
-      current.vxMetersPerSecond + recentAcceleration.vxMetersPerSecond * dtSeconds,
-      current.vyMetersPerSecond + recentAcceleration.vyMetersPerSecond * dtSeconds,
-      current.omegaRadiansPerSecond + recentAcceleration.omegaRadiansPerSecond * dtSeconds
+      current.vxMetersPerSecond + recentAcceleration.vxMetersPerSecond * dtSeconds * .5,
+      current.vyMetersPerSecond + recentAcceleration.vyMetersPerSecond * dtSeconds * .5,
+      current.omegaRadiansPerSecond + recentAcceleration.omegaRadiansPerSecond * dtSeconds * .5
     );
 
     return acceleratedSpeeds.toTwist2d(dtSeconds);

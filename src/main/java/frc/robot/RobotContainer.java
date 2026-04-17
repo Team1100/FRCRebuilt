@@ -13,11 +13,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.drive.DriveToTDPose;
 import frc.robot.commands.drive.SlowSwerveDrive;
 import frc.robot.commands.drive.SwerveDrive;
 import frc.robot.commands.drive.YoureUnderArrest;
 import frc.robot.commands.intake.IntakeIn;
 import frc.robot.commands.intake.IntakeIntake;
+import frc.robot.commands.intake.IntakeOscillate;
 import frc.robot.commands.intake.IntakeOutake;
 import frc.robot.commands.intake.DeployerOut;
 import frc.robot.commands.shooter.ChimneyUp;
@@ -100,12 +102,15 @@ public class RobotContainer {
     new CrawlingThroughTheTrench();
 
     new IntakeIn();
+    new IntakeOscillate();
     new DeployerOut();
 
     new SpindexerSpin();
     new ChimneyUp();
 
     new SlowSwerveDrive(null);
+
+    new DriveToTDPose();
   }
 
   private void configureBindings() {

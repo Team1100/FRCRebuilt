@@ -50,8 +50,8 @@ public class Intake extends SubsystemBase {
 
 			m_rollerTopConfig = rollerTopMotorConfig.m_config;
             m_rollerTopConfig
-                .idleMode(IdleMode.kCoast)
-                .smartCurrentLimit(cfgInt("rollerStallLimit"), cfgInt("rollerFreeLimit"));
+                .idleMode(IdleMode.kCoast);
+                //.smartCurrentLimit(cfgInt("rollerStallLimit"), cfgInt("rollerFreeLimit"));
             m_rollerMotor.configure(m_rollerTopConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
             m_TDrollerCurrentOutput = new TDNumber(this, "Roller", "Measured Current");

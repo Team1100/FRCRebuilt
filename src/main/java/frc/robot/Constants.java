@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.robot.utils.Configuration;
 import frc.robot.utils.trajectory.InterpolatingVelocityMap;
@@ -120,7 +121,8 @@ public final class Constants {
         public static final double kMaxAccelerationMetersPerSecondSquared = 10;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularSpeedRadiansPerSecondSquared = 4*Math.PI;
-
+        public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
 
         public static final double kPathFollowerMaxSpeed = AutoConstants.kMaxSpeedMetersPerSecond; // Max module speed, in m/s
         public static final double kPathFollowerBaseRadius = DriveConstants.kBaseRadius; // Drive base radius in meters
@@ -143,7 +145,7 @@ public final class Constants {
         public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
         public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1.2,1.2,0.8);//VecBuilder.fill(0.1, 0.1, 0.05);
-        public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.6,0.6,0.4);//VecBuilder.fill(0.05, 0.05, 0.001);
+        public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.3,0.3,0.2);//VecBuilder.fill(0.05, 0.05, 0.001);
         
         // Maximum ambiguity accepted as a valid result from the vision systems
         public static final double kMaxValidAmbiguity = 0.2;

@@ -117,7 +117,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeIn"
+                  "name": "IntakeOscillate"
                 }
               }
             ]
@@ -224,7 +224,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeIn"
+                  "name": "IntakeOscillate"
                 }
               }
             ]

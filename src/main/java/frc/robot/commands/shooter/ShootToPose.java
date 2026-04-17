@@ -18,6 +18,7 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Robot;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.LED;
@@ -123,7 +124,7 @@ public class ShootToPose extends Command {
             turretPose = m_Shooter.getTurretPose();
         }
 
-        ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(m_Drive.getMeasuredSpeeds(), m_Drive.getPose().getRotation());
+        ChassisSpeeds chassisSpeeds = m_Drive.getMeasuredFieldRelativeSpeeds();
 
         TrajectoryConditions conditions = new TrajectoryConditions();
         TrajectoryParameters params = null;
@@ -131,8 +132,10 @@ public class ShootToPose extends Command {
         for (int i = 0; i < ITERATIONS; i++) {
             Translation3d compensatingTarget;
             if (params != null) {
-                Twist2d twist = m_Drive.getFieldRelativeTwist(params.time);//chassisSpeeds.toTwist2d(params.time);
-                compensatingTarget = target.exp(new Twist3d(-twist.dx, -twist.dy, 0, 0, 0, -twist.dtheta)).getTranslation();
+                Twist2d twist = chassisSpeeds.toTwist2d(params.time);
+                // Twist2d twist = m_Drive.getFieldRelativeTwist(params.time);
+                double mod = FieldUtils.getInstance().getAlliance() == Alliance.Blue ? 1 : -1;
+                compensatingTarget = target.exp(new Twist3d(twist.dx * mod, twist.dy * mod, 0, 0, 0, twist.dtheta * mod)).getTranslation();
             } else {
                 compensatingTarget = target.getTranslation();
             }

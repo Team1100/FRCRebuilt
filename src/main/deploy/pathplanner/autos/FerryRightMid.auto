@@ -68,7 +68,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -149,7 +149,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeIn"
+                  "name": "IntakeOscillate"
                 }
               },
               {
@@ -166,15 +166,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "IntakeIn"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "RightFerry to RightShootPart1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIn"
                 }
               }
             ]
@@ -184,17 +184,17 @@
           "type": "deadline",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "IntakeIn"
-                }
-              },
               {
                 "type": "path",
                 "data": {
                   "pathName": "RightShootPart1 to RightShootPart2"
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIn"
+                }
               }
             ]
           }
@@ -204,15 +204,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "IntakeIn"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "RightShootPart2 to RightShoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeIn"
                 }
               }
             ]
@@ -237,7 +237,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "IntakeIn"
+                  "name": "IntakeOscillate"
                 }
               },
               {

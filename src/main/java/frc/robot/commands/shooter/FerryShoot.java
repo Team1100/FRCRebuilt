@@ -35,7 +35,7 @@ public class FerryShoot extends Command {
 
     private static Field2d m_field;
 
-    private static final VelocityMapping FERRY_VELOCITY_MAP = new VelocityMapping(3.15, 11.0, 0750, 6000);
+    private static final VelocityMapping FERRY_VELOCITY_MAP = new VelocityMapping(7.00, 11.0, 4000, 7000);
 
     public FerryShoot() {
         this(true);
@@ -71,11 +71,11 @@ public class FerryShoot extends Command {
         if ((alliance == Alliance.Blue && chassisPose.getY() < midFieldY) || 
             (alliance == Alliance.Red && chassisPose.getY() > midFieldY)) {
             Pose3d trenchPose = FieldUtils.getInstance().getTagPose(FieldUtils.getInstance().getAllianceAprilTags().frontRightTrench);
-            Pose3d hitPose = trenchPose.plus(new Transform3d(new Pose3d(), new Pose3d(new Translation3d(3.3, -1, 0), Rotation3d.kZero)));
+            Pose3d hitPose = trenchPose.plus(new Transform3d(new Pose3d(), new Pose3d(new Translation3d(2.3, -1, 0), Rotation3d.kZero)));
             target = hitPose.getTranslation().toTranslation2d();
         } else {
             Pose3d trenchPose = FieldUtils.getInstance().getTagPose(FieldUtils.getInstance().getAllianceAprilTags().frontLeftTrench);
-            Pose3d hitPose = trenchPose.plus(new Transform3d(new Pose3d(), new Pose3d(new Translation3d(3.3, 1, 0), Rotation3d.kZero)));
+            Pose3d hitPose = trenchPose.plus(new Transform3d(new Pose3d(), new Pose3d(new Translation3d(2.3, 1, 0), Rotation3d.kZero)));
             target = hitPose.getTranslation().toTranslation2d();
         }
         m_targetPosition = target;
