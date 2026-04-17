@@ -30,7 +30,7 @@ public class CrawlingThroughTheTrench extends Command {
   public void execute() {
     m_shooter.setTurretTarget(FieldUtils.getInstance().getAngleToPose(
       m_shooter.getTurretPose().toPose2d(),
-      FieldUtils.getInstance().getHubPose().toPose2d()).getRadians(), 0);
+      FieldUtils.getInstance().getClosestHubPose(m_shooter.getTurretPose().toPose2d()).toPose2d()).getRadians(), 0);
   }
 
   // Called once the command ends or is interrupted.

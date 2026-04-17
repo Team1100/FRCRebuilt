@@ -4,6 +4,8 @@
 
 package frc.robot.utils.vision;
 
+import java.lang.StackWalker.Option;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,16 +23,17 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Drive;;
 
 /** Add your docs here. */
 public class VisionSystem {
-
     private PhotonCamera m_camera;
     private PhotonPoseEstimator m_photonEstimator;
     private double m_lastEstTime;
     private Optional<VisionEstimationResult> m_latestResult;
+    private ArrayList<VisionEstimationResult> m_recentResults;
     private PoseStrategy m_multiStrategy;
     private PoseStrategy m_singleStrategy;
     private boolean m_includeInPoseEstimates;
@@ -48,6 +51,7 @@ public class VisionSystem {
         }
         m_latestResult = Optional.empty();
         m_includeInPoseEstimates = config.includeInPoseEstimates;
+        m_recentResults = new ArrayList<>();
     }
 
     public String getName() { return m_camera.getName(); }
@@ -127,9 +131,12 @@ public class VisionSystem {
                     m_lastEstTime = latestTimestamp;
                 }
 
-                if (valid) {
-                    Matrix<N3,N1> stdDevs = getEstimationStdDevs(est.estimatedPose.toPose2d());
-                    result = Optional.of(new VisionEstimationResult(est.estimatedPose, latestTimestamp, ambiguity, stdDevs, latestResult));
+                Matrix<N3,N1> stdDevs = getEstimationStdDevs(est.estimatedPose.toPose2d());
+                result = Optional.of(new VisionEstimationResult(est.estimatedPose, latestTimestamp, ambiguity, stdDevs, latestResult));
+                m_recentResults.add(result.get());
+
+                if (!valid) {
+                    result = Optional.empty();
                 }
             }
         }
@@ -213,6 +220,21 @@ public class VisionSystem {
         if(Math.abs(estPose.estimatedPose.getRotation().getX()) > VisionConstants.kMaxRollError ||
            Math.abs(estPose.estimatedPose.getRotation().getY()) > VisionConstants.kMaxPitchError) {
             System.out.println("pose too tilted roll " + estPose.estimatedPose.getRotation().getX() + " pitch " + estPose.estimatedPose.getRotation().getY());
+            return false;
+        }
+
+        Pose3d avgPose = new Pose3d();
+        double avgTime = 0;
+        for (var i : m_recentResults) {
+            avgPose = i.estimatedPose.relativeTo(avgPose);
+            avgTime += i.timestamp;
+        }
+        avgPose.div(m_recentResults.size());
+        avgTime /= m_recentResults.size();
+
+        double dist = avgPose.getTranslation().getDistance(estPose.estimatedPose.getTranslation());
+
+        if (dist > DriveConstants.kMaxSpeedMetersPerSecond * (estPose.timestampSeconds - avgTime)) {
             return false;
         }
 

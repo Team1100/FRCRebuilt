@@ -367,7 +367,7 @@
 	"Shooter" : [
 		{"varName" : "flywheelEnabled", "value" : true},
 
-        {"varName" : "tuneFlywheel", "value": false},
+        {"varName" : "tuneFlywheel", "value": true},
 
         {"varName" : "flywheelTolerance", "value" : 500},
 
@@ -518,7 +518,7 @@
             },
             "angles": {
                 "pitch": -25,
-                "yaw": -135,
+                "yaw": -160,
                 "roll": 0
             },
             "primaryStrat": "MULTI_TAG_PNP_ON_COPROCESSOR",
@@ -528,13 +528,13 @@
         {
             "name": "UnderPlateCamera",
             "translation": {
-                "x": -0.313,
-                "y": 0.189,
-                "z": -0.307
+                "x": -0.189,
+                "y": -0.313,
+                "z": 0.307
             },
             "angles": {
                 "pitch": -10,
-                "yaw": 295,
+                "yaw": -65,
                 "roll": 0
             },
             "primaryStrat": "MULTI_TAG_PNP_ON_COPROCESSOR",
